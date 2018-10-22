@@ -96,7 +96,7 @@ static const AVOption setparams_options[] = {
     {"smpte428",                       NULL,  0, AV_OPT_TYPE_CONST, {.i64=AVCOL_TRC_SMPTE428},     INT_MIN, INT_MAX, FLAGS, "color_trc"},
     {"arib-std-b67",                   NULL,  0, AV_OPT_TYPE_CONST, {.i64=AVCOL_TRC_ARIB_STD_B67}, INT_MIN, INT_MAX, FLAGS, "color_trc"},
 
-    {"colorspace", "select colorspace", OFFSET(color_trc), AV_OPT_TYPE_INT, {.i64=-1}, -1, AVCOL_SPC_NB-1, FLAGS, "colorspace"},
+    {"colorspace", "select colorspace", OFFSET(colorspace), AV_OPT_TYPE_INT, {.i64=-1}, -1, AVCOL_SPC_NB-1, FLAGS, "colorspace"},
     {"auto", "keep the same colorspace",  0, AV_OPT_TYPE_CONST, {.i64=-1},                          INT_MIN, INT_MAX, FLAGS, "colorspace"},
     {"gbr",                        NULL,  0, AV_OPT_TYPE_CONST, {.i64=AVCOL_SPC_RGB},               INT_MIN, INT_MAX, FLAGS, "colorspace"},
     {"bt709",                      NULL,  0, AV_OPT_TYPE_CONST, {.i64=AVCOL_SPC_BT709},             INT_MIN, INT_MAX, FLAGS, "colorspace"},
@@ -163,7 +163,7 @@ static const AVFilterPad outputs[] = {
 
 AVFilter ff_vf_setparams = {
     .name        = "setparams",
-    .description = NULL_IF_CONFIG_SMALL("Force field, or color range for the output video frame."),
+    .description = NULL_IF_CONFIG_SMALL("Force field, or color property for the output video frame."),
     .priv_size   = sizeof(SetParamsContext),
     .priv_class  = &setparams_class,
     .inputs      = inputs,
@@ -193,6 +193,9 @@ static av_cold int init_setrange(AVFilterContext *ctx)
     SetParamsContext *s = ctx->priv;
 
     s->field_mode = MODE_AUTO;/* set field mode to auto */
+    s->color_primaries = -1;
+    s->color_trc       = -1;
+    s->colorspace      = -1;
     return 0;
 }
 
@@ -224,6 +227,9 @@ static av_cold int init_setfield(AVFilterContext *ctx)
     SetParamsContext *s = ctx->priv;
 
     s->color_range = -1;/* set range mode to auto */
+    s->color_primaries = -1;
+    s->color_trc       = -1;
+    s->colorspace      = -1;
     return 0;
 }
 
