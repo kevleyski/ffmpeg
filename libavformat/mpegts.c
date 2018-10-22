@@ -465,6 +465,7 @@ static void write_section_data(MpegTSContext *ts, MpegTSFilter *tss1,
             offset += tss->section_h_size;
             tss->section_h_size = -1;
         } else {
+            tss->section_h_size = -1;
             tss->end_of_section_reached = 0;
             break;
         }
@@ -1982,7 +1983,7 @@ int ff_parse_mpeg2_descriptor(AVFormatContext *fc, AVStream *st, int stream_type
                 int service_type = ((component_type & service_type_mask) >> 3);
                 if (service_type == 0x02 /* 0b010 */) {
                     st->disposition |= AV_DISPOSITION_DESCRIPTIONS;
-                    av_log(ts->stream, AV_LOG_DEBUG, "New track disposition for id %u: %u\n", st->id, st->disposition);
+                    av_log(ts ? ts->stream : fc, AV_LOG_DEBUG, "New track disposition for id %u: %u\n", st->id, st->disposition);
                 }
             }
         }
@@ -1996,7 +1997,7 @@ int ff_parse_mpeg2_descriptor(AVFormatContext *fc, AVStream *st, int stream_type
                 int service_type = ((component_type & service_type_mask) >> 3);
                 if (service_type == 0x02 /* 0b010 */) {
                     st->disposition |= AV_DISPOSITION_DESCRIPTIONS;
-                    av_log(ts->stream, AV_LOG_DEBUG, "New track disposition for id %u: %u\n", st->id, st->disposition);
+                    av_log(ts ? ts->stream : fc, AV_LOG_DEBUG, "New track disposition for id %u: %u\n", st->id, st->disposition);
                 }
             }
         }
@@ -2491,19 +2492,15 @@ static int handle_packet(MpegTSContext *ts, const uint8_t *packet)
             tss->last_cc < 0 ||
             expected_cc == cc;
 
-// KJSL hack
-
     tss->last_cc = cc;
     if (!cc_ok) {
         av_log(ts->stream, AV_LOG_DEBUG,
-               "Continuity check failed for pid %d expected %d got %d KJSL: IGNORING\n",
+               "Continuity check failed for pid %d expected %d got %d\n",
                pid, expected_cc, cc);
-        cc_ok = 1;
-
-     //   if (tss->type == MPEGTS_PES) {
-     //       PESContext *pc = tss->u.pes_filter.opaque;
-     //       pc->flags |= AV_PKT_FLAG_CORRUPT;
-     //   }
+        if (tss->type == MPEGTS_PES) {
+            PESContext *pc = tss->u.pes_filter.opaque;
+            pc->flags |= AV_PKT_FLAG_CORRUPT;
+        }
     }
 
     if (packet[1] & 0x80) {
