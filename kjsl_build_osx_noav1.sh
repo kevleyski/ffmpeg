@@ -32,7 +32,7 @@
  -I/usr/local/Cellar/xvid/1.3.4/include \
  -I/usr/local/Cellar/sdl/1.2.15/include \
  -I/usr/local/Cellar/openssl/1.0.2p/include \
- -I/usr/local/include/openjpeg-2.3/include \
+ -I/usr/local/include/openjpeg-2.3 \
  -I/usr/include"
 
 make -j5
