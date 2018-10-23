@@ -10,13 +10,12 @@
 #fi
 
 # build FFmpeg 4 (with AV1)
- ./configure  --prefix=/usr/local --enable-gpl --enable-nonfree \
+ PKG_CONFIG_PATH="/usr/local/lib/pkgconfig" ./configure  --prefix=/usr/local --enable-gpl --enable-nonfree \
  --enable-libass --enable-libfdk-aac --enable-libfreetype \
  --enable-libopus --enable-libtheora --enable-libvorbis \
  --enable-libopenjpeg --enable-avfilter \
  --enable-libvpx --enable-libx264 --enable-libx265 --enable-libxvid --enable-ffplay --enable-sdl2 \
  --enable-libmp3lame \
- --enable-openssl \
  --extra-ldflags="-L/usr/local/Cellar/lame/3.99.5/lib \
  -L/usr/local/Cellar/libogg/1.3.2/lib \
  -L/usr/local/Cellar/theora/1.1.1/lib \
