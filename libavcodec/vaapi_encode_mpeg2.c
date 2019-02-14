@@ -35,9 +35,6 @@ typedef struct VAAPIEncodeMPEG2Context {
     int level;
 
     // Derived settings.
-    int mb_width;
-    int mb_height;
-
     int quant_i;
     int quant_p;
     int quant_b;
@@ -477,8 +474,6 @@ static int vaapi_encode_mpeg2_init_picture_params(AVCodecContext *avctx,
     vpic->f_code[1][0]       = pce->f_code[1][0];
     vpic->f_code[1][1]       = pce->f_code[1][1];
 
-    pic->nb_slices = priv->mb_height;
-
     return 0;
 }
 
@@ -490,8 +485,8 @@ static int vaapi_encode_mpeg2_init_slice_params(AVCodecContext *avctx,
     VAEncSliceParameterBufferMPEG2   *vslice = slice->codec_slice_params;
     int qp;
 
-    vslice->macroblock_address = priv->mb_width * slice->index;
-    vslice->num_macroblocks    = priv->mb_width;
+    vslice->macroblock_address = slice->block_start;
+    vslice->num_macroblocks    = slice->block_size;
 
     switch (pic->type) {
     case PICTURE_TYPE_IDR:
@@ -525,9 +520,6 @@ static av_cold int vaapi_encode_mpeg2_configure(AVCodecContext *avctx)
     if (err < 0)
         return err;
 
-    priv->mb_width  = FFALIGN(avctx->width,  16) / 16;
-    priv->mb_height = FFALIGN(avctx->height, 16) / 16;
-
     if (ctx->va_rc_mode == VA_RC_CQP) {
         priv->quant_p = av_clip(avctx->global_quality, 1, 31);
         if (avctx->i_quant_factor > 0.0)
@@ -553,6 +545,12 @@ static av_cold int vaapi_encode_mpeg2_configure(AVCodecContext *avctx)
         av_assert0(0 && "Invalid RC mode.");
     }
 
+    ctx->slice_block_rows = FFALIGN(avctx->height, 16) / 16;
+    ctx->slice_block_cols = FFALIGN(avctx->width,  16) / 16;
+
+    ctx->nb_slices  = ctx->slice_block_rows;
+    ctx->slice_size = 1;
+
     return 0;
 }
 
@@ -564,6 +562,8 @@ static const VAAPIEncodeProfile vaapi_encode_mpeg2_profiles[] = {
 
 static const VAAPIEncodeType vaapi_encode_type_mpeg2 = {
     .profiles              = vaapi_encode_mpeg2_profiles,
+
+    .flags                 = FLAG_B_PICTURES,
 
     .configure             = &vaapi_encode_mpeg2_configure,
 
@@ -691,7 +691,8 @@ AVCodec ff_mpeg2_vaapi_encoder = {
     .id             = AV_CODEC_ID_MPEG2VIDEO,
     .priv_data_size = sizeof(VAAPIEncodeMPEG2Context),
     .init           = &vaapi_encode_mpeg2_init,
-    .encode2        = &ff_vaapi_encode2,
+    .send_frame     = &ff_vaapi_encode_send_frame,
+    .receive_packet = &ff_vaapi_encode_receive_packet,
     .close          = &vaapi_encode_mpeg2_close,
     .priv_class     = &vaapi_encode_mpeg2_class,
     .capabilities   = AV_CODEC_CAP_DELAY | AV_CODEC_CAP_HARDWARE,

@@ -541,7 +541,7 @@ static int http_open(URLContext *h, const char *uri, int flags,
         int len = strlen(s->headers);
         if (len < 2 || strcmp("\r\n", s->headers + len - 2)) {
             av_log(h, AV_LOG_WARNING,
-                   "No trailing CRLF found in HTTP header.\n");
+                   "No trailing CRLF found in HTTP header. Adding it.\n");
             ret = av_reallocp(&s->headers, len + 3);
             if (ret < 0)
                 return ret;
@@ -1650,7 +1650,7 @@ static int http_close(URLContext *h)
     av_freep(&s->inflate_buffer);
 #endif /* CONFIG_ZLIB */
 
-    if (!s->end_chunked_post)
+    if (s->hd && !s->end_chunked_post)
         /* Close the write direction by sending the end of chunked encoding. */
         ret = http_shutdown(h, h->flags);
 
