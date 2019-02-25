@@ -315,6 +315,9 @@ This option will also try to comply with the above open spec, till Apple's spec 
 Applicable only when @var{streaming} and @var{hls_playlist} options are enabled.
 This is an experimental feature.
 
+@item -master_m3u8_publish_rate @var{master_m3u8_publish_rate}
+Publish master playlist repeatedly every after specified number of segment intervals.
+
 @end table
 
 @anchor{framecrc}
@@ -1523,7 +1526,7 @@ Set the program @samp{service_type}. Default is @code{digital_tv}.
 Accepts the following options:
 @table @samp
 @item hex_value
-Any hexadecimal value between @code{0x01} to @code{0xff} as defined in
+Any hexadecimal value between @code{0x01} and @code{0xff} as defined in
 ETSI 300 468.
 @item digital_tv
 Digital TV service.
