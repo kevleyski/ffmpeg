@@ -1046,8 +1046,6 @@ static int bink_decode_plane(BinkContext *c, AVFrame *frame, GetBitContext *gb,
         if ((ret = read_runs(c->avctx, gb, &c->bundle[BINK_SRC_RUN])) < 0)
             return ret;
 
-        if (by == bh)
-            break;
         dst  = frame->data[plane_idx]  + 8*by*stride;
         prev = (c->last->data[plane_idx] ? c->last->data[plane_idx]
                                          : frame->data[plane_idx]) + 8*by*stride;
@@ -1335,12 +1333,12 @@ static av_cold int decode_init(AVCodecContext *avctx)
     }
     c->avctx = avctx;
 
+    if ((ret = av_image_check_size(avctx->width, avctx->height, 0, avctx)) < 0)
+        return ret;
+
     c->last = av_frame_alloc();
     if (!c->last)
         return AVERROR(ENOMEM);
-
-    if ((ret = av_image_check_size(avctx->width, avctx->height, 0, avctx)) < 0)
-        return ret;
 
     avctx->pix_fmt = c->has_alpha ? AV_PIX_FMT_YUVA420P : AV_PIX_FMT_YUV420P;
     avctx->color_range = c->version == 'k' ? AVCOL_RANGE_JPEG : AVCOL_RANGE_MPEG;
