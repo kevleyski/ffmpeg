@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ffprobe" type="CLionExternalRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-show_frames $PROJECT_DIR$/../streama/media/baseline_720_avc.ts" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ffmpeg" TARGET_NAME="FFprobe" CONFIG_NAME="FFprobe" RUN_PATH="$PROJECT_DIR$/ffprobe_g">
+    <method v="2">
+      <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+    </method>
+  </configuration>
+</component>

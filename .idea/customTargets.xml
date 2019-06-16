@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CLionExternalBuildManager">
+    <target id="a5ca230a-15f6-4323-8261-fea136ea35db" name="FFprobe" projectName="ffmpeg">
+      <configuration id="e6a069a7-2dd9-4350-9d91-206810a787ae" name="FFprobe">
+        <build type="TOOL">
+          <tool actionId="Tool_External Tools_make ffprobe" />
+        </build>
+      </configuration>
+    </target>
+    <target id="39325a4b-3b6d-4e18-9abb-87cb920a8c5d" name="FFplay" projectName="ffmpeg">
+      <configuration id="c90875bf-f4f7-46bb-bdc0-3e4ca2b41b4f" name="FFplay">
+        <build type="TOOL">
+          <tool actionId="Tool_External Tools_make ffplay" />
+        </build>
+      </configuration>
+    </target>
+    <target id="53524c16-f42d-41e1-9515-d52df8e55a62" name="FFmpeg" projectName="ffmpeg">
+      <configuration id="1b9f0a66-4580-412a-b880-5b5e07b7bc04" name="FFmpeg">
+        <build type="TOOL">
+          <tool actionId="Tool_External Tools_make ffmpeg" />
+        </build>
+      </configuration>
+    </target>
+  </component>
+</project>
