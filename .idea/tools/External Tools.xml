@@ -17,7 +17,7 @@
     <exec>
       <option name="COMMAND" value="make" />
       <option name="PARAMETERS" value="ffmpeg" />
-      <option name="WORKING_DIRECTORY" />
+      <option name="WORKING_DIRECTORY" value="$ProjectFileDir$" />
     </exec>
   </tool>
 </toolSet>

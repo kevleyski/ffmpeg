@@ -10,14 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="45ec317e-9f74-4354-bd97-bc2630dc4cad" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/customTargets.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/Makefile.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/ffmpeg.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/ffplay.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/ffprobe.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/tools/External Tools.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/ffmpeg__hls_discos_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/tools/External Tools.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/tools/External Tools.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aom-master/third_party/libwebm/AUTHORS.TXT" beforeDir="false" afterPath="$PROJECT_DIR$/aom-master/third_party/libwebm/AUTHORS.TXT" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kjsl_build_osx.sh" beforeDir="false" afterPath="$PROJECT_DIR$/kjsl_build_osx.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fftools/ffmpeg.c" beforeDir="false" afterPath="$PROJECT_DIR$/fftools/ffmpeg.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fftools/ffmpeg.h" beforeDir="false" afterPath="$PROJECT_DIR$/fftools/ffmpeg.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fftools/ffmpeg_opt.c" beforeDir="false" afterPath="$PROJECT_DIR$/fftools/ffmpeg_opt.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -31,45 +31,9 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/libavformat/utils.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="1628" selection-start-line="1628" selection-end-line="1628" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/libavcodec/mpeg2_metadata_bsf.c">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fftools/ffprobe.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="3018" selection-start-line="3018" selection-end-line="3018" />
-              <folding>
-                <element signature="e#132737#132824#0" expanded="true" />
-                <element signature="e#133052#133076#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/libavcodec/mpeg4videodec.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="3567" column="49" selection-start-line="3567" selection-start-column="29" selection-end-line="3567" selection-end-column="49" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/libavcodec/h263.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
+            <state relative-caret-position="795">
               <caret line="53" column="4" selection-start-line="53" selection-start-column="4" selection-end-line="53" selection-end-column="4" />
             </state>
           </provider>
@@ -78,7 +42,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/libavcodec/h263dec.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
+            <state relative-caret-position="6300">
               <caret line="420" column="4" selection-start-line="420" selection-start-column="4" selection-end-line="420" selection-end-column="4" />
             </state>
           </provider>
@@ -87,7 +51,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/libavcodec/mmaldec.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
+            <state relative-caret-position="9525">
               <caret line="635" column="26" selection-start-line="635" selection-start-column="26" selection-end-line="635" selection-end-column="26" />
             </state>
           </provider>
@@ -96,7 +60,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/libavcodec/internal.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
+            <state relative-caret-position="5685">
               <caret line="379" column="17" selection-start-line="379" selection-start-column="4" selection-end-line="379" selection-end-column="17" />
             </state>
           </provider>
@@ -105,17 +69,51 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/libavcodec/decode.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="403">
+            <state relative-caret-position="21135">
               <caret line="1409" selection-start-line="1409" selection-end-line="1409" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/libavcodec/mpeg12dec.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="2779" selection-start-line="2779" selection-end-line="2779" />
+            <state relative-caret-position="223">
+              <caret line="2781" column="31" selection-start-line="2781" selection-start-column="31" selection-end-line="2781" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config.asm">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-13061" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="570">
+              <caret line="38" column="21" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/fftools/ffmpeg.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="119">
+              <caret line="4431" column="34" lean-forward="true" selection-start-line="4431" selection-start-column="34" selection-end-line="4431" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/libavformat/ircamenc.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="513">
+              <caret line="55" column="44" selection-start-line="55" selection-start-column="44" selection-end-line="55" selection-end-column="44" />
             </state>
           </provider>
         </entry>
@@ -143,6 +141,10 @@
       <find>ff_h263_decode_frame</find>
       <find>_decode_frame</find>
       <find>ff_get_format</find>
+      <find>force_</find>
+      <find>force_dts_monotonicity</find>
+      <find>BERK</find>
+      <find>force_dts_monotonicty</find>
     </findStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$</dir>
@@ -155,6 +157,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/Makefile" />
+        <option value="$PROJECT_DIR$/fftools/ffmpeg.c" />
       </list>
     </option>
   </component>
@@ -162,8 +165,8 @@
     <option name="directoryName" value="csoBwusy" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="604" />
-    <option name="y" value="54" />
+    <option name="x" value="481" />
+    <option name="y" value="15" />
     <option name="width" value="1439" />
     <option name="height" value="1185" />
   </component>
@@ -177,18 +180,13 @@
         <subPane>
           <expand>
             <path>
-              <item name="ffmpeg" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ffmpeg" type="462c0819:PsiDirectoryNode" />
+              <item name="FFmpeg" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FFmpeg" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="ffmpeg" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ffmpeg" type="462c0819:PsiDirectoryNode" />
-              <item name="libavcodec" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="ffmpeg" type="b2602c69:ProjectViewProjectNode" />
-              <item name="ffmpeg" type="462c0819:PsiDirectoryNode" />
-              <item name="libavutil" type="462c0819:PsiDirectoryNode" />
+              <item name="FFmpeg" type="b2602c69:ProjectViewProjectNode" />
+              <item name="FFmpeg" type="462c0819:PsiDirectoryNode" />
+              <item name="fftools" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -203,8 +201,11 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="restartRequiresConfirmation" value="false" />
@@ -222,7 +223,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Custom Build Application.ffplay">
+  <component name="RunManager" selected="Custom Build Application.ffmpeg (hls discos)">
     <configuration name="Makefile (1)" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
       <makefile filename="$PROJECT_DIR$/Makefile" target="" workingDirectory="" arguments="">
         <envs />
@@ -257,6 +258,7 @@
       <item itemvalue="Custom Build Application.ffprobe" />
       <item itemvalue="Custom Build Application.ffplay" />
       <item itemvalue="Custom Build Application.ffmpeg" />
+      <item itemvalue="Custom Build Application.ffmpeg (hls discos)" />
       <item itemvalue="Makefile.Makefile" />
       <item itemvalue="Makefile.ffprobe" />
       <item itemvalue="Makefile.Makefile (1)" />
@@ -266,7 +268,6 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Makefile.Makefile" />
         <item itemvalue="Makefile.Makefile (4)" />
         <item itemvalue="Makefile.Makefile (3)" />
         <item itemvalue="Makefile.Makefile (2)" />
@@ -294,11 +295,12 @@
       <workItem from="1551158428160" duration="108000" />
       <workItem from="1551163342752" duration="113000" />
       <workItem from="1560726718516" duration="2714000" />
+      <workItem from="1567803371126" duration="2079000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8514000" />
+    <option name="totallyTimeSpent" value="10593000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -310,20 +312,19 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="604" y="54" width="1439" height="1185" extended-state="0" />
+    <frame x="481" y="15" width="1439" height="1185" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25268432" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25626343" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
       <window_info id="Capture Tool" order="5" />
-      <window_info anchor="bottom" id="Tail" />
-      <window_info anchor="bottom" id="Conan" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3299725" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.3293687" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.39981702" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3293687" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39981702" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -332,8 +333,8 @@
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="10" weight="0.3293687" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
-      <window_info anchor="right" id="make" />
-      <window_info anchor="right" id="Cargo" />
+      <window_info anchor="bottom" id="Tail" order="12" />
+      <window_info anchor="bottom" id="Conan" order="13" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -341,6 +342,8 @@
       <window_info anchor="right" id="Theme Preview" order="4" />
       <window_info anchor="right" id="Capture Analysis" order="5" />
       <window_info anchor="right" id="Palette&#9;" order="6" />
+      <window_info anchor="right" id="Cargo" order="7" />
+      <window_info anchor="right" id="make" order="8" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -496,7 +499,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/fftools/ffmpeg.c</url>
-          <line>4844</line>
+          <line>4890</line>
           <option name="timeStamp" value="32" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
@@ -662,13 +665,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fftools/ffmpeg.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="4842" column="8" selection-start-line="4842" selection-end-line="4842" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/libavutil/frame.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="342">
@@ -721,9 +717,19 @@
     <entry file="file://$PROJECT_DIR$/libavutil/timestamp.h">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/libavformat/utils.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="24420">
+          <caret line="1628" selection-start-line="1628" selection-end-line="1628" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libavcodec/mpeg2_metadata_bsf.c">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/fftools/ffprobe.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
+        <state relative-caret-position="45270">
           <caret line="3018" selection-start-line="3018" selection-end-line="3018" />
           <folding>
             <element signature="e#132737#132824#0" expanded="true" />
@@ -732,62 +738,78 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/libavformat/utils.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="1628" selection-start-line="1628" selection-end-line="1628" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/libavcodec/mpeg2_metadata_bsf.c">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/libavcodec/mpeg4videodec.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
+        <state relative-caret-position="53505">
           <caret line="3567" column="49" selection-start-line="3567" selection-start-column="29" selection-end-line="3567" selection-end-column="49" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/libavcodec/h263.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
+        <state relative-caret-position="795">
           <caret line="53" column="4" selection-start-line="53" selection-start-column="4" selection-end-line="53" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/libavcodec/h263dec.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
+        <state relative-caret-position="6300">
           <caret line="420" column="4" selection-start-line="420" selection-start-column="4" selection-end-line="420" selection-end-column="4" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/libavcodec/mmaldec.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
+        <state relative-caret-position="9525">
           <caret line="635" column="26" selection-start-line="635" selection-start-column="26" selection-end-line="635" selection-end-column="26" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/libavcodec/internal.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
+        <state relative-caret-position="5685">
           <caret line="379" column="17" selection-start-line="379" selection-start-column="4" selection-end-line="379" selection-end-column="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/libavcodec/decode.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="403">
+        <state relative-caret-position="21135">
           <caret line="1409" selection-start-line="1409" selection-end-line="1409" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/libavcodec/mpeg12dec.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="2779" selection-start-line="2779" selection-end-line="2779" />
+        <state relative-caret-position="223">
+          <caret line="2781" column="31" selection-start-line="2781" selection-start-column="31" selection-end-line="2781" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.asm">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-13061" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="38" column="21" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libavformat/ircamenc.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="55" column="44" selection-start-line="55" selection-start-column="44" selection-end-line="55" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fftools/ffmpeg.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="4431" column="34" lean-forward="true" selection-start-line="4431" selection-start-column="34" selection-end-line="4431" selection-end-column="34" />
         </state>
       </provider>
     </entry>
