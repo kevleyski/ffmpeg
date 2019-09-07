@@ -9,11 +9,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45ec317e-9f74-4354-bd97-bc2630dc4cad" name="Default Changelist" comment="[KJSL] HLS discos issue&#10;Adding force_dts_monotonicity from&#10;https://ffmpeg.org/pipermail/ffmpeg-devel/2018-March/226706.html">
-      <change beforePath="$PROJECT_DIR$/.idea/FFmpeg.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/FFmpeg.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fftools/ffmpeg.c" beforeDir="false" afterPath="$PROJECT_DIR$/fftools/ffmpeg.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fftools/ffmpeg.h" beforeDir="false" afterPath="$PROJECT_DIR$/fftools/ffmpeg.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fftools/ffmpeg_opt.c" beforeDir="false" afterPath="$PROJECT_DIR$/fftools/ffmpeg_opt.c" afterDir="false" />
+    <list default="true" id="45ec317e-9f74-4354-bd97-bc2630dc4cad" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/ffmpeg__hls_discos_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/ffmpeg__hls_discos_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -144,6 +142,14 @@
       <workItem from="1560726718516" duration="2714000" />
       <workItem from="1567803371126" duration="2079000" />
     </task>
+    <task id="LOCAL-00001" summary="[KJSL] HLS discos issue&#10;Adding force_dts_monotonicity from&#10;https://ffmpeg.org/pipermail/ffmpeg-devel/2018-March/226706.html&#10;http://ffmpeg.org/pipermail/ffmpeg-devel/attachments/20180316/739542e4/attachment.obj">
+      <created>1567811310694</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1567811310694</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView">
@@ -161,13 +167,28 @@
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
+        <entry key="1">
+          <value>
+            <State />
+          </value>
+        </entry>
         <entry key="2">
+          <value>
+            <State />
+          </value>
+        </entry>
+        <entry key="MAIN">
           <value>
             <State />
           </value>
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <MESSAGE value="[KJSL] HLS discos issue&#10;Adding force_dts_monotonicity from&#10;https://ffmpeg.org/pipermail/ffmpeg-devel/2018-March/226706.html&#10;http://ffmpeg.org/pipermail/ffmpeg-devel/attachments/20180316/739542e4/attachment.obj" />
+    <option name="LAST_COMMIT_MESSAGE" value="[KJSL] HLS discos issue&#10;Adding force_dts_monotonicity from&#10;https://ffmpeg.org/pipermail/ffmpeg-devel/2018-March/226706.html&#10;http://ffmpeg.org/pipermail/ffmpeg-devel/attachments/20180316/739542e4/attachment.obj" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -311,11 +332,6 @@
           <url>file://$PROJECT_DIR$/libavcodec/mjpegdec.c</url>
           <line>2268</line>
           <option name="timeStamp" value="30" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/fftools/ffmpeg.c</url>
-          <line>4889</line>
-          <option name="timeStamp" value="32" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/fftools/ffprobe.c</url>
