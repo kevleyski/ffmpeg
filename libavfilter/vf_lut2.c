@@ -125,11 +125,12 @@ static av_cold void uninit(AVFilterContext *ctx)
 
 #define BIT12_FMTS \
     AV_PIX_FMT_YUV420P12, AV_PIX_FMT_YUV422P12, AV_PIX_FMT_YUV444P12, AV_PIX_FMT_YUV440P12, \
+    AV_PIX_FMT_YUVA422P12, AV_PIX_FMT_YUVA444P12, \
     AV_PIX_FMT_GRAY12, AV_PIX_FMT_GBRAP12, AV_PIX_FMT_GBRP12,
 
 #define BIT14_FMTS \
     AV_PIX_FMT_YUV420P14, AV_PIX_FMT_YUV422P14, AV_PIX_FMT_YUV444P14, \
-    AV_PIX_FMT_GRAY12, AV_PIX_FMT_GBRP14,
+    AV_PIX_FMT_GRAY14, AV_PIX_FMT_GBRP14,
 
 #define BIT16_FMTS \
     AV_PIX_FMT_YUV420P16, AV_PIX_FMT_YUV422P16, AV_PIX_FMT_YUV444P16, \
@@ -507,7 +508,10 @@ static int lut2_config_output(AVFilterLink *outlink)
     if ((ret = config_output(outlink)) < 0)
         return ret;
 
-    return ff_framesync_configure(&s->fs);
+    ret = ff_framesync_configure(&s->fs);
+    outlink->time_base = s->fs.time_base;
+
+    return ret;
 }
 
 static int activate(AVFilterContext *ctx)
