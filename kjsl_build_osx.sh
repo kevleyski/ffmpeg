@@ -19,6 +19,7 @@ cd ..
  --enable-libvpx --enable-libx264 --enable-libx265 --enable-libxvid --enable-ffplay \
  --enable-libaom \
  --enable-libtesseract \
+ --enable-libsrt --enable-librtmp \
  --extra-ldflags="-L/usr/local/Cellar/lame/3.99.5/lib \
  -L/usr/local/Cellar/libogg/1.3.2/lib \
  -L/usr/local/Cellar/theora/1.1.1/lib \
