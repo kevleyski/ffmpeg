@@ -62,6 +62,7 @@ static const char *opt_name_hwaccels[]                  = {"hwaccel", NULL};
 static const char *opt_name_hwaccel_devices[]           = {"hwaccel_device", NULL};
 static const char *opt_name_hwaccel_output_formats[]    = {"hwaccel_output_format", NULL};
 static const char *opt_name_autorotate[]                = {"autorotate", NULL};
+static const char *opt_name_autoscale[]                 = {"autoscale", NULL};
 static const char *opt_name_max_frames[]                = {"frames", "aframes", "vframes", "dframes", NULL};
 static const char *opt_name_bitstream_filters[]         = {"bsf", "absf", "vbsf", NULL};
 static const char *opt_name_codec_tags[]                = {"tag", "atag", "vtag", "stag", NULL};
@@ -174,6 +175,7 @@ float max_error_rate  = 2.0/3;
 int filter_nbthreads = 0;
 int filter_complex_nbthreads = 0;
 int vstats_version = 2;
+int auto_conversion_filters = 1;
 
 
 static int intra_only         = 0;
@@ -230,6 +232,7 @@ static void init_options(OptionsContext *o)
     o->limit_filesize = UINT64_MAX;
     o->chapters_input_file = INT_MAX;
     o->accurate_seek  = 1;
+    o->thread_queue_size = -1;
 }
 
 static int show_hwaccels(void *optctx, const char *opt, const char *arg)
@@ -1273,7 +1276,7 @@ static int open_input_file(OptionsContext *o, const char *filename)
     f->duration = 0;
     f->time_base = (AVRational){ 1, 1 };
 #if HAVE_THREADS
-    f->thread_queue_size = o->thread_queue_size > 0 ? o->thread_queue_size : 8;
+    f->thread_queue_size = o->thread_queue_size;
 #endif
 
     /* check if all codec options have been used */
@@ -1466,6 +1469,8 @@ static OutputStream *new_output_stream(OptionsContext *o, AVFormatContext *oc, e
         ost->encoder_opts  = filter_codec_opts(o->g->codec_opts, ost->enc->id, oc, st, ost->enc);
 
         MATCH_PER_STREAM_OPT(presets, str, preset, oc, st);
+        ost->autoscale = 1;
+        MATCH_PER_STREAM_OPT(autoscale, i, ost->autoscale, oc, st);
         if (preset && (!(ret = get_preset_file_2(preset, ost->enc->name, &s)))) {
             do  {
                 buf = get_line(s);
@@ -2209,22 +2214,23 @@ static int open_output_file(OptionsContext *o, const char *filename)
 
         /* video: highest resolution */
         if (!o->video_disable && av_guess_codec(oc->oformat, NULL, filename, NULL, AVMEDIA_TYPE_VIDEO) != AV_CODEC_ID_NONE) {
-            int area = 0, idx = -1;
+            int best_score = 0, idx = -1;
             int qcr = avformat_query_codec(oc->oformat, oc->oformat->video_codec, 0);
             for (i = 0; i < nb_input_streams; i++) {
-                int new_area;
+                int score;
                 ist = input_streams[i];
-                new_area = ist->st->codecpar->width * ist->st->codecpar->height + 100000000*!!ist->st->codec_info_nb_frames
+                score = ist->st->codecpar->width * ist->st->codecpar->height
+                           + 100000000 * !!(ist->st->event_flags & AVSTREAM_EVENT_FLAG_NEW_PACKETS)
                            + 5000000*!!(ist->st->disposition & AV_DISPOSITION_DEFAULT);
                 if (ist->user_set_discard == AVDISCARD_ALL)
                     continue;
                 if((qcr!=MKTAG('A', 'P', 'I', 'C')) && (ist->st->disposition & AV_DISPOSITION_ATTACHED_PIC))
-                    new_area = 1;
+                    score = 1;
                 if (ist->st->codecpar->codec_type == AVMEDIA_TYPE_VIDEO &&
-                    new_area > area) {
+                    score > best_score) {
                     if((qcr==MKTAG('A', 'P', 'I', 'C')) && !(ist->st->disposition & AV_DISPOSITION_ATTACHED_PIC))
                         continue;
-                    area = new_area;
+                    best_score = score;
                     idx = i;
                 }
             }
@@ -3549,6 +3555,8 @@ const OptionDef options[] = {
         "create a complex filtergraph", "graph_description" },
     { "filter_complex_script", HAS_ARG | OPT_EXPERT,                 { .func_arg = opt_filter_complex_script },
         "read complex filtergraph description from a file", "filename" },
+    { "auto_conversion_filters", OPT_BOOL | OPT_EXPERT,              { &auto_conversion_filters },
+        "enable automatic conversion filters globally" },
     { "stats",          OPT_BOOL,                                    { &print_stats },
         "print progress report during encoding", },
     { "attach",         HAS_ARG | OPT_PERFILE | OPT_EXPERT |
@@ -3672,6 +3680,9 @@ const OptionDef options[] = {
     { "autorotate",       HAS_ARG | OPT_BOOL | OPT_SPEC |
                           OPT_EXPERT | OPT_INPUT,                                { .off = OFFSET(autorotate) },
         "automatically insert correct rotate filters" },
+    { "autoscale",        HAS_ARG | OPT_BOOL | OPT_SPEC |
+                          OPT_EXPERT | OPT_OUTPUT,                               { .off = OFFSET(autoscale) },
+        "automatically insert a scale filter at the end of the filter graph" },
 
     /* audio options */
     { "aframes",        OPT_AUDIO | HAS_ARG  | OPT_PERFILE | OPT_OUTPUT,           { .func_arg = opt_audio_frames },

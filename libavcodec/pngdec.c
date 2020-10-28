@@ -984,6 +984,11 @@ static int decode_fctl_chunk(AVCodecContext *avctx, PNGDecContext *s,
         return AVERROR_INVALIDDATA;
     }
 
+    if (s->pic_state & PNG_IDAT) {
+        av_log(avctx, AV_LOG_ERROR, "fctl after IDAT\n");
+        return AVERROR_INVALIDDATA;
+    }
+
     s->last_w = s->cur_w;
     s->last_h = s->cur_h;
     s->last_x_offset = s->x_offset;
@@ -1592,6 +1597,8 @@ static int decode_frame_lscr(AVCodecContext *avctx,
 
     if (avpkt->size < 2)
         return AVERROR_INVALIDDATA;
+    if (avpkt->size == 2)
+        return 0;
 
     bytestream2_init(gb, avpkt->data, avpkt->size);
 
