@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:release" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated />
   </component>
@@ -10,10 +34,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="45ec317e-9f74-4354-bd97-bc2630dc4cad" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/kjsl_build_osx_options.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kjsl_build_osx.sh" beforeDir="false" afterPath="$PROJECT_DIR$/kjsl_build_osx.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/third_party/libwebm/AUTHORS.TXT" beforeDir="false" afterPath="$PROJECT_DIR$/aom-master/third_party/libwebm/AUTHORS.TXT" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/kjsl_build_osx_noav1.sh" beforeDir="false" afterPath="$PROJECT_DIR$/kjsl_build_osx_noav1.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -35,23 +57,18 @@
   <component name="MacroExpansionManager">
     <option name="directoryName" value="csoBwusy" />
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="481" />
-    <option name="y" value="15" />
-    <option name="width" value="1439" />
-    <option name="height" value="1185" />
-  </component>
   <component name="ProjectId" id="1ckM1TQC4dHKogzrWb7wA4Tgvut" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -69,7 +86,12 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Custom Build Application.ffmpeg (hls discos)">
+  <component name="RunManager" selected="Makefile.Makefile">
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Makefile (1)" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
       <makefile filename="$PROJECT_DIR$/Makefile" target="" workingDirectory="" arguments="">
         <envs />
@@ -94,6 +116,12 @@
       </makefile>
       <method v="2" />
     </configuration>
+    <configuration name="Makefile" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
     <configuration name="ffprobe" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile">
       <makefile filename="$PROJECT_DIR$/Makefile" target="ffprobe" workingDirectory="" arguments="">
         <envs />
@@ -101,12 +129,12 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Custom Build Application.ffprobe" />
       <item itemvalue="Custom Build Application.ffplay" />
       <item itemvalue="Custom Build Application.ffmpeg" />
+      <item itemvalue="Custom Build Application.ffprobe" />
       <item itemvalue="Custom Build Application.ffmpeg (hls discos)" />
-      <item itemvalue="Makefile.Makefile" />
       <item itemvalue="Makefile.ffprobe" />
+      <item itemvalue="Makefile.Makefile" />
       <item itemvalue="Makefile.Makefile (1)" />
       <item itemvalue="Makefile.Makefile (2)" />
       <item itemvalue="Makefile.Makefile (3)" />
@@ -114,14 +142,15 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Makefile.Makefile" />
         <item itemvalue="Makefile.Makefile (4)" />
         <item itemvalue="Makefile.Makefile (3)" />
         <item itemvalue="Makefile.Makefile (2)" />
         <item itemvalue="Makefile.Makefile (1)" />
-        <item itemvalue="Makefile.Makefile (4)" />
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -144,6 +173,8 @@
       <workItem from="1560726718516" duration="2714000" />
       <workItem from="1567803371126" duration="2079000" />
       <workItem from="1591067924121" duration="196000" />
+      <workItem from="1603923904543" duration="970000" />
+      <workItem from="1604366292295" duration="935000" />
     </task>
     <task id="LOCAL-00001" summary="[KJSL] HLS discos issue&#10;Adding force_dts_monotonicity from&#10;https://ffmpeg.org/pipermail/ffmpeg-devel/2018-March/226706.html&#10;http://ffmpeg.org/pipermail/ffmpeg-devel/attachments/20180316/739542e4/attachment.obj">
       <created>1567811310694</created>
@@ -165,7 +196,7 @@
     </todo-panel>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -182,18 +213,38 @@
         </entry>
         <entry key="MAIN">
           <value>
-            <State>
-              <option name="COLUMN_ORDER" />
-            </State>
+            <State />
           </value>
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <MESSAGE value="[KJSL] HLS discos issue&#10;Adding force_dts_monotonicity from&#10;https://ffmpeg.org/pipermail/ffmpeg-devel/2018-March/226706.html&#10;http://ffmpeg.org/pipermail/ffmpeg-devel/attachments/20180316/739542e4/attachment.obj" />
     <option name="LAST_COMMIT_MESSAGE" value="[KJSL] HLS discos issue&#10;Adding force_dts_monotonicity from&#10;https://ffmpeg.org/pipermail/ffmpeg-devel/2018-March/226706.html&#10;http://ffmpeg.org/pipermail/ffmpeg-devel/attachments/20180316/739542e4/attachment.obj" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="2262" height="391" key="GridCell.Tab.0.bottom" timestamp="1604366539216">
+      <screen x="0" y="23" width="2304" height="1362" />
+    </state>
+    <state width="2262" height="391" key="GridCell.Tab.0.bottom/0.23.2304.1362@0.23.2304.1362" timestamp="1604366539216" />
+    <state width="2262" height="391" key="GridCell.Tab.0.center" timestamp="1604366539215">
+      <screen x="0" y="23" width="2304" height="1362" />
+    </state>
+    <state width="2262" height="391" key="GridCell.Tab.0.center/0.23.2304.1362@0.23.2304.1362" timestamp="1604366539215" />
+    <state width="2262" height="391" key="GridCell.Tab.0.left" timestamp="1604366539214">
+      <screen x="0" y="23" width="2304" height="1362" />
+    </state>
+    <state width="2262" height="391" key="GridCell.Tab.0.left/0.23.2304.1362@0.23.2304.1362" timestamp="1604366539214" />
+    <state width="2262" height="391" key="GridCell.Tab.0.right" timestamp="1604366539215">
+      <screen x="0" y="23" width="2304" height="1362" />
+    </state>
+    <state width="2262" height="391" key="GridCell.Tab.0.right/0.23.2304.1362@0.23.2304.1362" timestamp="1604366539215" />
+    <state x="859" y="459" width="586" height="490" key="find.popup" timestamp="1604366304995">
+      <screen x="0" y="23" width="2304" height="1362" />
+    </state>
+    <state x="859" y="459" width="586" height="490" key="find.popup/0.23.2304.1362@0.23.2304.1362" timestamp="1604366304995" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -397,6 +448,11 @@
           <url>file://$PROJECT_DIR$/fftools/ffmpeg.c</url>
           <line>4515</line>
           <option name="timeStamp" value="50" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/libavcodec/allcodecs.c</url>
+          <line>943</line>
+          <option name="timeStamp" value="51" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
