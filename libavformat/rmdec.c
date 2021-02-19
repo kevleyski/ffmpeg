@@ -223,7 +223,7 @@ static int rm_read_audio_stream_info(AVFormatContext *s, AVIOContext *pb,
                 if (version == 5)
                     avio_r8(pb);
                 codecdata_length = avio_rb32(pb);
-                if(codecdata_length + AV_INPUT_BUFFER_PADDING_SIZE <= (unsigned)codecdata_length){
+                if((unsigned)codecdata_length > INT_MAX - AV_INPUT_BUFFER_PADDING_SIZE){
                     av_log(s, AV_LOG_ERROR, "codecdata_length too large\n");
                     return -1;
                 }
@@ -254,7 +254,7 @@ static int rm_read_audio_stream_info(AVFormatContext *s, AVIOContext *pb,
             if (version == 5)
                 avio_r8(pb);
             codecdata_length = avio_rb32(pb);
-            if(codecdata_length + AV_INPUT_BUFFER_PADDING_SIZE <= (unsigned)codecdata_length){
+            if((unsigned)codecdata_length > INT_MAX - AV_INPUT_BUFFER_PADDING_SIZE){
                 av_log(s, AV_LOG_ERROR, "codecdata_length too large\n");
                 return -1;
             }
@@ -458,6 +458,8 @@ static int rm_read_index(AVFormatContext *s)
         }
 
         for (n = 0; n < n_pkts; n++) {
+            if (avio_feof(pb))
+                return AVERROR_INVALIDDATA;
             avio_skip(pb, 2);
             pts = avio_rb32(pb);
             pos = avio_rb32(pb);
@@ -717,9 +719,9 @@ static int rm_sync(AVFormatContext *s, int64_t *timestamp, int *flags, int *stre
                     av_log(s, AV_LOG_WARNING,
                            "Index size %d (%d pkts) is wrong, should be %"PRId64".\n",
                            len, n_pkts, expected_len);
-                len -= 14; // we already read part of the index header
-                if(len<0)
+                if(len < 14)
                     continue;
+                len -= 14; // we already read part of the index header
                 goto skip;
             } else if (state == MKBETAG('D','A','T','A')) {
                 av_log(s, AV_LOG_WARNING,
@@ -817,7 +819,6 @@ static int rm_assemble_video_frame(AVFormatContext *s, AVIOContext *pb,
         av_packet_unref(&vst->pkt); //FIXME this should be output.
         if ((ret = av_new_packet(&vst->pkt, vst->videobufsize)) < 0)
             return ret;
-        memset(vst->pkt.data, 0, vst->pkt.size);
         vst->videobufpos = 8*vst->slices + 1;
         vst->cur_slice = 0;
         vst->curpic_num = pic_num;
@@ -849,7 +850,7 @@ static int rm_assemble_video_frame(AVFormatContext *s, AVIOContext *pb,
         if(vst->slices != vst->cur_slice) //FIXME find out how to set slices correct from the begin
             memmove(pkt->data + 1 + 8*vst->cur_slice, pkt->data + 1 + 8*vst->slices,
                 vst->videobufpos - 1 - 8*vst->slices);
-        pkt->size = vst->videobufpos + 8*(vst->cur_slice - vst->slices);
+        av_shrink_packet(pkt, vst->videobufpos + 8*(vst->cur_slice - vst->slices));
         pkt->pts = AV_NOPTS_VALUE;
         pkt->pos = vst->pktpos;
         vst->slices = 0;
@@ -1289,8 +1290,11 @@ static int ivr_read_header(AVFormatContext *s)
                 int j;
 
                 av_log(s, AV_LOG_DEBUG, "%s = '0x", key);
-                for (j = 0; j < len; j++)
+                for (j = 0; j < len; j++) {
+                    if (avio_feof(pb))
+                        return AVERROR_INVALIDDATA;
                     av_log(s, AV_LOG_DEBUG, "%X", avio_r8(pb));
+                }
                 av_log(s, AV_LOG_DEBUG, "'\n");
             } else if (len == 4 && type == 3 && !strncmp(key, "Duration", tlen)) {
                 st->duration = avio_rb32(pb);

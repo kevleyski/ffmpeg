@@ -66,7 +66,7 @@ static av_cold int cri_decode_init(AVCodecContext *avctx)
     s->jpeg_avctx->flags2 = avctx->flags2;
     s->jpeg_avctx->dct_algo = avctx->dct_algo;
     s->jpeg_avctx->idct_algo = avctx->idct_algo;
-    ret = ff_codec_open2_recursive(s->jpeg_avctx, codec, NULL);
+    ret = avcodec_open2(s->jpeg_avctx, codec, NULL);
     if (ret < 0)
         return ret;
 
@@ -80,10 +80,13 @@ static void unpack_10bit(GetByteContext *gb, uint16_t *dst, int shift,
     int pos = 0;
 
     while (count > 0) {
-        uint32_t a0 = bytestream2_get_le32(gb);
-        uint32_t a1 = bytestream2_get_le32(gb);
-        uint32_t a2 = bytestream2_get_le32(gb);
-        uint32_t a3 = bytestream2_get_le32(gb);
+        uint32_t a0, a1, a2, a3;
+        if (bytestream2_get_bytes_left(gb) < 4)
+            break;
+        a0 = bytestream2_get_le32(gb);
+        a1 = bytestream2_get_le32(gb);
+        a2 = bytestream2_get_le32(gb);
+        a3 = bytestream2_get_le32(gb);
         dst[pos] = (((a0 >> 1) & 0xE00) | (a0 & 0x1FF)) << shift;
         pos++;
         if (pos >= w) {
@@ -181,6 +184,7 @@ static int cri_decode_frame(AVCodecContext *avctx, void *data,
         char codec_name[1024];
         uint32_t key, length;
         float framerate;
+        int width, height;
 
         key    = bytestream2_get_le32(gb);
         length = bytestream2_get_le32(gb);
@@ -196,11 +200,14 @@ static int cri_decode_frame(AVCodecContext *avctx, void *data,
         case 100:
             if (length < 16)
                 return AVERROR_INVALIDDATA;
-            avctx->width   = bytestream2_get_le32(gb);
-            avctx->height  = bytestream2_get_le32(gb);
+            width   = bytestream2_get_le32(gb);
+            height  = bytestream2_get_le32(gb);
             s->color_model = bytestream2_get_le32(gb);
             if (bytestream2_get_le32(gb) != 1)
                 return AVERROR_INVALIDDATA;
+            ret = ff_set_dimensions(avctx, width, height);
+            if (ret < 0)
+                return ret;
             length -= 16;
             goto skip;
         case 101:
@@ -419,6 +426,6 @@ AVCodec ff_cri_decoder = {
     .decode         = cri_decode_frame,
     .close          = cri_decode_close,
     .capabilities   = AV_CODEC_CAP_DR1 | AV_CODEC_CAP_FRAME_THREADS,
-    .caps_internal  = FF_CODEC_CAP_INIT_CLEANUP,
+    .caps_internal  = FF_CODEC_CAP_INIT_THREADSAFE | FF_CODEC_CAP_INIT_CLEANUP,
     .long_name      = NULL_IF_CONFIG_SMALL("Cintel RAW"),
 };

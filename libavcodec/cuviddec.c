@@ -553,6 +553,12 @@ static int cuvid_output_frame(AVCodecContext *avctx, AVFrame *frame)
 
             tmp_frame->format        = AV_PIX_FMT_CUDA;
             tmp_frame->hw_frames_ctx = av_buffer_ref(ctx->hwframe);
+            if (!tmp_frame->hw_frames_ctx) {
+                ret = AVERROR(ENOMEM);
+                av_frame_free(&tmp_frame);
+                goto error;
+            }
+
             tmp_frame->width         = avctx->width;
             tmp_frame->height        = avctx->height;
 
@@ -628,6 +634,9 @@ FF_ENABLE_DEPRECATION_WARNINGS
     }
 
 error:
+    if (ret < 0)
+        av_frame_unref(frame);
+
     if (mapped_frame)
         eret = CHECK_CU(ctx->cvdl->cuvidUnmapVideoFrame(ctx->cudecoder, mapped_frame));
 
@@ -673,14 +682,21 @@ static int cuvid_decode_frame(AVCodecContext *avctx, void *data, int *got_frame,
 static av_cold int cuvid_decode_end(AVCodecContext *avctx)
 {
     CuvidContext *ctx = avctx->priv_data;
+    AVHWDeviceContext *device_ctx = (AVHWDeviceContext *)ctx->hwdevice->data;
+    AVCUDADeviceContext *device_hwctx = device_ctx->hwctx;
+    CUcontext dummy, cuda_ctx = device_hwctx->cuda_ctx;
 
     av_fifo_freep(&ctx->frame_queue);
+
+    ctx->cudl->cuCtxPushCurrent(cuda_ctx);
 
     if (ctx->cuparser)
         ctx->cvdl->cuvidDestroyVideoParser(ctx->cuparser);
 
     if (ctx->cudecoder)
         ctx->cvdl->cuvidDestroyDecoder(ctx->cudecoder);
+
+    ctx->cudl->cuCtxPopCurrent(&dummy);
 
     ctx->cudl = NULL;
 
@@ -1100,7 +1116,7 @@ static const AVOption options[] = {
     { NULL }
 };
 
-static const AVCodecHWConfigInternal *cuvid_hw_configs[] = {
+static const AVCodecHWConfigInternal *const cuvid_hw_configs[] = {
     &(const AVCodecHWConfigInternal) {
         .public = {
             .pix_fmt     = AV_PIX_FMT_CUDA,

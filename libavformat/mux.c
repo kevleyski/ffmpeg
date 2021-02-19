@@ -546,7 +546,7 @@ FF_DISABLE_DEPRECATION_WARNINGS
 static int compute_muxer_pkt_fields(AVFormatContext *s, AVStream *st, AVPacket *pkt)
 {
     int delay = FFMAX(st->codecpar->video_delay, st->internal->avctx->max_b_frames > 0);
-    int num, den, i;
+    int i;
     int frame_size;
 
     if (!s->internal->missing_ts_warning &&
@@ -563,20 +563,6 @@ static int compute_muxer_pkt_fields(AVFormatContext *s, AVStream *st, AVPacket *
     if (s->debug & FF_FDEBUG_TS)
         av_log(s, AV_LOG_DEBUG, "compute_muxer_pkt_fields: pts:%s dts:%s cur_dts:%s b:%d size:%d st:%d\n",
             av_ts2str(pkt->pts), av_ts2str(pkt->dts), av_ts2str(st->cur_dts), delay, pkt->size, pkt->stream_index);
-
-    if (pkt->duration < 0 && st->codecpar->codec_type != AVMEDIA_TYPE_SUBTITLE) {
-        av_log(s, AV_LOG_WARNING, "Packet with invalid duration %"PRId64" in stream %d\n",
-               pkt->duration, pkt->stream_index);
-        pkt->duration = 0;
-    }
-
-    /* duration field */
-    if (pkt->duration == 0) {
-        ff_compute_frame_duration(s, &num, &den, st, NULL, pkt);
-        if (den && num) {
-            pkt->duration = av_rescale(1, num * (int64_t)st->time_base.den * st->codec->ticks_per_frame, den * (int64_t)st->time_base.num);
-        }
-    }
 
     if (pkt->pts == AV_NOPTS_VALUE && pkt->dts != AV_NOPTS_VALUE && delay == 0)
         pkt->pts = pkt->dts;
@@ -651,6 +637,37 @@ static int compute_muxer_pkt_fields(AVFormatContext *s, AVStream *st, AVPacket *
 }
 FF_ENABLE_DEPRECATION_WARNINGS
 #endif
+
+static void guess_pkt_duration(AVFormatContext *s, AVStream *st, AVPacket *pkt)
+{
+    if (pkt->duration < 0 && st->codecpar->codec_type != AVMEDIA_TYPE_SUBTITLE) {
+        av_log(s, AV_LOG_WARNING, "Packet with invalid duration %"PRId64" in stream %d\n",
+               pkt->duration, pkt->stream_index);
+        pkt->duration = 0;
+    }
+
+    if (pkt->duration)
+        return;
+
+    switch (st->codecpar->codec_type) {
+    case AVMEDIA_TYPE_VIDEO:
+        if (st->avg_frame_rate.num > 0 && st->avg_frame_rate.den > 0) {
+            pkt->duration = av_rescale_q(1, av_inv_q(st->avg_frame_rate),
+                                         st->time_base);
+        } else if (st->time_base.num * 1000LL > st->time_base.den)
+            pkt->duration = 1;
+        break;
+    case AVMEDIA_TYPE_AUDIO: {
+        int frame_size = av_get_audio_frame_duration2(st->codecpar, pkt->size);
+        if (frame_size && st->codecpar->sample_rate) {
+            pkt->duration = av_rescale_q(frame_size,
+                                         (AVRational){1, st->codecpar->sample_rate},
+                                         st->time_base);
+        }
+        break;
+        }
+    }
+}
 
 /**
  * Shift timestamps and call muxer; the original pts/dts are not kept.
@@ -1029,30 +1046,32 @@ int ff_interleave_packet_per_dts(AVFormatContext *s, AVPacket *out,
     }
 }
 
-int ff_interleaved_peek(AVFormatContext *s, int stream,
-                        AVPacket *pkt, int add_offset)
+int ff_get_muxer_ts_offset(AVFormatContext *s, int stream_index, int64_t *offset)
+{
+    AVStream *st;
+
+    if (stream_index < 0 || stream_index >= s->nb_streams)
+        return AVERROR(EINVAL);
+
+    st = s->streams[stream_index];
+    *offset = st->internal->mux_ts_offset;
+
+    if (s->output_ts_offset)
+        *offset += av_rescale_q(s->output_ts_offset, AV_TIME_BASE_Q, st->time_base);
+
+    return 0;
+}
+
+const AVPacket *ff_interleaved_peek(AVFormatContext *s, int stream)
 {
     AVPacketList *pktl = s->internal->packet_buffer;
     while (pktl) {
         if (pktl->pkt.stream_index == stream) {
-            *pkt = pktl->pkt;
-            if (add_offset) {
-                AVStream *st = s->streams[pkt->stream_index];
-                int64_t offset = st->internal->mux_ts_offset;
-
-                if (s->output_ts_offset)
-                    offset += av_rescale_q(s->output_ts_offset, AV_TIME_BASE_Q, st->time_base);
-
-                if (pkt->dts != AV_NOPTS_VALUE)
-                    pkt->dts += offset;
-                if (pkt->pts != AV_NOPTS_VALUE)
-                    pkt->pts += offset;
-            }
-            return 0;
+            return &pktl->pkt;
         }
         pktl = pktl->next;
     }
-    return AVERROR(ENOENT);
+    return NULL;
 }
 
 /**
@@ -1117,6 +1136,8 @@ static int write_packet_common(AVFormatContext *s, AVStream *st, AVPacket *pkt, 
     if (s->debug & FF_FDEBUG_TS)
         av_log(s, AV_LOG_DEBUG, "%s size:%d dts:%s pts:%s\n", __FUNCTION__,
                pkt->size, av_ts2str(pkt->dts), av_ts2str(pkt->pts));
+
+    guess_pkt_duration(s, st, pkt);
 
 #if FF_API_COMPUTE_PKT_FIELDS2 && FF_API_LAVF_AVCTX
     if ((ret = compute_muxer_pkt_fields(s, st, pkt)) < 0 && !(s->oformat->flags & AVFMT_NOTIMESTAMPS))

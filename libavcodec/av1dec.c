@@ -18,7 +18,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+#include "libavutil/film_grain_params.h"
 #include "libavutil/pixdesc.h"
+#include "libavutil/opt.h"
 #include "avcodec.h"
 #include "av1dec.h"
 #include "bytestream.h"
@@ -145,6 +147,128 @@ static void global_motion_params(AV1DecContext *s)
     }
 }
 
+static int get_relative_dist(const AV1RawSequenceHeader *seq,
+                             unsigned int a, unsigned int b)
+{
+    unsigned int diff = a - b;
+    unsigned int m = 1 << seq->order_hint_bits_minus_1;
+    return (diff & (m - 1)) - (diff & m);
+}
+
+static void skip_mode_params(AV1DecContext *s)
+{
+    const AV1RawFrameHeader *header = s->raw_frame_header;
+    const AV1RawSequenceHeader *seq = s->raw_seq;
+
+    int forward_idx,  backward_idx;
+    int forward_hint, backward_hint;
+    int second_forward_idx, second_forward_hint;
+    int ref_hint, dist, i;
+
+    if (!header->skip_mode_present)
+        return;
+
+    forward_idx  = -1;
+    backward_idx = -1;
+    for (i = 0; i < AV1_REFS_PER_FRAME; i++) {
+        ref_hint = s->ref[header->ref_frame_idx[i]].raw_frame_header->order_hint;
+        dist = get_relative_dist(seq, ref_hint, header->order_hint);
+        if (dist < 0) {
+            if (forward_idx < 0 ||
+                get_relative_dist(seq, ref_hint, forward_hint) > 0) {
+                forward_idx  = i;
+                forward_hint = ref_hint;
+            }
+        } else if (dist > 0) {
+            if (backward_idx < 0 ||
+                get_relative_dist(seq, ref_hint, backward_hint) < 0) {
+                backward_idx  = i;
+                backward_hint = ref_hint;
+            }
+        }
+    }
+
+    if (forward_idx < 0) {
+        return;
+    } else if (backward_idx >= 0) {
+        s->cur_frame.skip_mode_frame_idx[0] =
+            AV1_REF_FRAME_LAST + FFMIN(forward_idx, backward_idx);
+        s->cur_frame.skip_mode_frame_idx[1] =
+            AV1_REF_FRAME_LAST + FFMAX(forward_idx, backward_idx);
+        return;
+    }
+
+    second_forward_idx = -1;
+    for (i = 0; i < AV1_REFS_PER_FRAME; i++) {
+        ref_hint = s->ref[header->ref_frame_idx[i]].raw_frame_header->order_hint;
+        if (get_relative_dist(seq, ref_hint, forward_hint) < 0) {
+            if (second_forward_idx < 0 ||
+                get_relative_dist(seq, ref_hint, second_forward_hint) > 0) {
+                second_forward_idx  = i;
+                second_forward_hint = ref_hint;
+            }
+        }
+    }
+
+    if (second_forward_idx < 0)
+        return;
+
+    s->cur_frame.skip_mode_frame_idx[0] =
+        AV1_REF_FRAME_LAST + FFMIN(forward_idx, second_forward_idx);
+    s->cur_frame.skip_mode_frame_idx[1] =
+        AV1_REF_FRAME_LAST + FFMAX(forward_idx, second_forward_idx);
+}
+
+static void coded_lossless_param(AV1DecContext *s)
+{
+    const AV1RawFrameHeader *header = s->raw_frame_header;
+    int i;
+
+    if (header->delta_q_y_dc || header->delta_q_u_ac ||
+        header->delta_q_u_dc || header->delta_q_v_ac ||
+        header->delta_q_v_dc) {
+        s->cur_frame.coded_lossless = 0;
+        return;
+    }
+
+    s->cur_frame.coded_lossless = 1;
+    for (i = 0; i < AV1_MAX_SEGMENTS; i++) {
+        int qindex;
+        if (header->feature_enabled[i][AV1_SEG_LVL_ALT_Q]) {
+            qindex = (header->base_q_idx +
+                      header->feature_value[i][AV1_SEG_LVL_ALT_Q]);
+        } else {
+            qindex = header->base_q_idx;
+        }
+        qindex = av_clip_uintp2(qindex, 8);
+
+        if (qindex) {
+            s->cur_frame.coded_lossless = 0;
+            return;
+        }
+    }
+}
+
+static void load_grain_params(AV1DecContext *s)
+{
+    const AV1RawFrameHeader *header = s->raw_frame_header;
+    const AV1RawFilmGrainParams *film_grain = &header->film_grain, *src;
+    AV1RawFilmGrainParams *dst = &s->cur_frame.film_grain;
+
+    if (!film_grain->apply_grain)
+        return;
+
+    if (film_grain->update_grain) {
+        memcpy(dst, film_grain, sizeof(*dst));
+        return;
+    }
+
+    src = &s->ref[film_grain->film_grain_params_ref_idx].film_grain;
+
+    memcpy(dst, src, sizeof(*dst));
+    dst->grain_seed = film_grain->grain_seed;
+}
+
 static int init_tile_data(AV1DecContext *s)
 
 {
@@ -215,7 +339,10 @@ static int get_pixel_format(AVCodecContext *avctx)
     uint8_t bit_depth;
     int ret;
     enum AVPixelFormat pix_fmt = AV_PIX_FMT_NONE;
-#define HWACCEL_MAX (0)
+#define HWACCEL_MAX (CONFIG_AV1_DXVA2_HWACCEL + \
+                     CONFIG_AV1_D3D11VA_HWACCEL * 2 + \
+                     CONFIG_AV1_NVDEC_HWACCEL + \
+                     CONFIG_AV1_VAAPI_HWACCEL)
     enum AVPixelFormat pix_fmts[HWACCEL_MAX + 2], *fmtp = pix_fmts;
 
     if (seq->seq_profile == 2 && seq->color_config.high_bitdepth)
@@ -262,9 +389,12 @@ static int get_pixel_format(AVCodecContext *avctx)
                 av_log(avctx, AV_LOG_WARNING, "Unknown AV1 pixel format.\n");
         }
     } else {
-        if (seq->color_config.subsampling_x == 1 &&
-            seq->color_config.subsampling_y == 1)
-            pix_fmt = AV_PIX_FMT_YUV440P;
+        if (bit_depth == 8)
+            pix_fmt = AV_PIX_FMT_GRAY8;
+        else if (bit_depth == 10)
+            pix_fmt = AV_PIX_FMT_GRAY10;
+        else if (bit_depth == 12)
+            pix_fmt = AV_PIX_FMT_GRAY12;
         else
             av_log(avctx, AV_LOG_WARNING, "Unknown AV1 pixel format.\n");
     }
@@ -275,6 +405,49 @@ static int get_pixel_format(AVCodecContext *avctx)
     if (pix_fmt == AV_PIX_FMT_NONE)
         return -1;
     s->pix_fmt = pix_fmt;
+
+    switch (s->pix_fmt) {
+    case AV_PIX_FMT_YUV420P:
+#if CONFIG_AV1_DXVA2_HWACCEL
+        *fmtp++ = AV_PIX_FMT_DXVA2_VLD;
+#endif
+#if CONFIG_AV1_D3D11VA_HWACCEL
+        *fmtp++ = AV_PIX_FMT_D3D11VA_VLD;
+        *fmtp++ = AV_PIX_FMT_D3D11;
+#endif
+#if CONFIG_AV1_NVDEC_HWACCEL
+        *fmtp++ = AV_PIX_FMT_CUDA;
+#endif
+#if CONFIG_AV1_VAAPI_HWACCEL
+        *fmtp++ = AV_PIX_FMT_VAAPI;
+#endif
+        break;
+    case AV_PIX_FMT_YUV420P10:
+#if CONFIG_AV1_DXVA2_HWACCEL
+        *fmtp++ = AV_PIX_FMT_DXVA2_VLD;
+#endif
+#if CONFIG_AV1_D3D11VA_HWACCEL
+        *fmtp++ = AV_PIX_FMT_D3D11VA_VLD;
+        *fmtp++ = AV_PIX_FMT_D3D11;
+#endif
+#if CONFIG_AV1_NVDEC_HWACCEL
+        *fmtp++ = AV_PIX_FMT_CUDA;
+#endif
+#if CONFIG_AV1_VAAPI_HWACCEL
+        *fmtp++ = AV_PIX_FMT_VAAPI;
+#endif
+        break;
+    case AV_PIX_FMT_GRAY8:
+#if CONFIG_AV1_NVDEC_HWACCEL
+        *fmtp++ = AV_PIX_FMT_CUDA;
+#endif
+        break;
+    case AV_PIX_FMT_GRAY10:
+#if CONFIG_AV1_NVDEC_HWACCEL
+        *fmtp++ = AV_PIX_FMT_CUDA;
+#endif
+        break;
+    }
 
     *fmtp++ = s->pix_fmt;
     *fmtp = AV_PIX_FMT_NONE;
@@ -304,7 +477,13 @@ static void av1_frame_unref(AVCodecContext *avctx, AV1Frame *f)
     ff_thread_release_buffer(avctx, &f->tf);
     av_buffer_unref(&f->hwaccel_priv_buf);
     f->hwaccel_picture_private = NULL;
+    av_buffer_unref(&f->header_ref);
+    f->raw_frame_header = NULL;
     f->spatial_id = f->temporal_id = 0;
+    memset(f->skip_mode_frame_idx, 0,
+           2 * sizeof(uint8_t));
+    memset(&f->film_grain, 0, sizeof(f->film_grain));
+    f->coded_lossless = 0;
 }
 
 static int av1_frame_ref(AVCodecContext *avctx, AV1Frame *dst, const AV1Frame *src)
@@ -314,6 +493,12 @@ static int av1_frame_ref(AVCodecContext *avctx, AV1Frame *dst, const AV1Frame *s
     ret = ff_thread_ref_frame(&dst->tf, &src->tf);
     if (ret < 0)
         return ret;
+
+    dst->header_ref = av_buffer_ref(src->header_ref);
+    if (!dst->header_ref)
+        goto fail;
+
+    dst->raw_frame_header = src->raw_frame_header;
 
     if (src->hwaccel_picture_private) {
         dst->hwaccel_priv_buf = av_buffer_ref(src->hwaccel_priv_buf);
@@ -330,6 +515,13 @@ static int av1_frame_ref(AVCodecContext *avctx, AV1Frame *dst, const AV1Frame *s
     memcpy(dst->gm_params,
            src->gm_params,
            AV1_NUM_REF_FRAMES * 6 * sizeof(int32_t));
+    memcpy(dst->skip_mode_frame_idx,
+           src->skip_mode_frame_idx,
+           2 * sizeof(uint8_t));
+    memcpy(&dst->film_grain,
+           &src->film_grain,
+           sizeof(dst->film_grain));
+    dst->coded_lossless = src->coded_lossless;
 
     return 0;
 
@@ -462,9 +654,12 @@ static av_cold int av1_decode_init(AVCodecContext *avctx)
     if (ret < 0)
         return ret;
 
+    av_opt_set_int(s->cbc->priv_data, "operating_point", s->operating_point, 0);
+
     if (avctx->extradata && avctx->extradata_size) {
-        ret = ff_cbs_read(s->cbc, &s->current_obu, avctx->extradata,
-                          avctx->extradata_size);
+        ret = ff_cbs_read_extradata_from_codec(s->cbc,
+                                               &s->current_obu,
+                                               avctx);
         if (ret < 0) {
             av_log(avctx, AV_LOG_WARNING, "Failed to read extradata.\n");
             return ret;
@@ -502,8 +697,14 @@ static int av1_frame_alloc(AVCodecContext *avctx, AV1Frame *f)
         return ret;
     }
 
+    f->header_ref = av_buffer_ref(s->header_ref);
+    if (!f->header_ref)
+        return AVERROR(ENOMEM);
+
+    f->raw_frame_header = s->raw_frame_header;
+
     if ((ret = ff_thread_get_buffer(avctx, &f->tf, AV_GET_BUFFER_FLAG_REF)) < 0)
-        return ret;
+        goto fail;
 
     frame = f->tf.f;
     frame->key_frame = header->frame_type == AV1_FRAME_KEY;
@@ -526,8 +727,10 @@ static int av1_frame_alloc(AVCodecContext *avctx, AV1Frame *f)
         if (hwaccel->frame_priv_data_size) {
             f->hwaccel_priv_buf =
                 av_buffer_allocz(hwaccel->frame_priv_data_size);
-            if (!f->hwaccel_priv_buf)
+            if (!f->hwaccel_priv_buf) {
+                ret = AVERROR(ENOMEM);
                 goto fail;
+            }
             f->hwaccel_picture_private = f->hwaccel_priv_buf->data;
         }
     }
@@ -535,7 +738,67 @@ static int av1_frame_alloc(AVCodecContext *avctx, AV1Frame *f)
 
 fail:
     av1_frame_unref(avctx, f);
-    return AVERROR(ENOMEM);
+    return ret;
+}
+
+static int export_film_grain(AVCodecContext *avctx, AVFrame *frame)
+{
+    AV1DecContext *s = avctx->priv_data;
+    const AV1RawFilmGrainParams *film_grain = &s->cur_frame.film_grain;
+    AVFilmGrainParams *fgp;
+    AVFilmGrainAOMParams *aom;
+
+    if (!film_grain->apply_grain)
+        return 0;
+
+    fgp = av_film_grain_params_create_side_data(frame);
+    if (!fgp)
+        return AVERROR(ENOMEM);
+
+    fgp->type = AV_FILM_GRAIN_PARAMS_AV1;
+    fgp->seed = film_grain->grain_seed;
+
+    aom = &fgp->codec.aom;
+    aom->chroma_scaling_from_luma = film_grain->chroma_scaling_from_luma;
+    aom->scaling_shift = film_grain->grain_scaling_minus_8 + 8;
+    aom->ar_coeff_lag = film_grain->ar_coeff_lag;
+    aom->ar_coeff_shift = film_grain->ar_coeff_shift_minus_6 + 6;
+    aom->grain_scale_shift = film_grain->grain_scale_shift;
+    aom->overlap_flag = film_grain->overlap_flag;
+    aom->limit_output_range = film_grain->clip_to_restricted_range;
+
+    aom->num_y_points = film_grain->num_y_points;
+    for (int i = 0; i < film_grain->num_y_points; i++) {
+        aom->y_points[i][0] = film_grain->point_y_value[i];
+        aom->y_points[i][1] = film_grain->point_y_scaling[i];
+    }
+    aom->num_uv_points[0] = film_grain->num_cb_points;
+    for (int i = 0; i < film_grain->num_cb_points; i++) {
+        aom->uv_points[0][i][0] = film_grain->point_cb_value[i];
+        aom->uv_points[0][i][1] = film_grain->point_cb_scaling[i];
+    }
+    aom->num_uv_points[1] = film_grain->num_cr_points;
+    for (int i = 0; i < film_grain->num_cr_points; i++) {
+        aom->uv_points[1][i][0] = film_grain->point_cr_value[i];
+        aom->uv_points[1][i][1] = film_grain->point_cr_scaling[i];
+    }
+
+    for (int i = 0; i < 24; i++) {
+        aom->ar_coeffs_y[i] = film_grain->ar_coeffs_y_plus_128[i] - 128;
+    }
+    for (int i = 0; i < 25; i++) {
+        aom->ar_coeffs_uv[0][i] = film_grain->ar_coeffs_cb_plus_128[i] - 128;
+        aom->ar_coeffs_uv[1][i] = film_grain->ar_coeffs_cr_plus_128[i] - 128;
+    }
+
+    aom->uv_mult[0] = film_grain->cb_mult;
+    aom->uv_mult[1] = film_grain->cr_mult;
+    aom->uv_mult_luma[0] = film_grain->cb_luma_mult;
+    aom->uv_mult_luma[1] = film_grain->cr_luma_mult;
+    aom->uv_offset[0] = film_grain->cb_offset;
+    aom->uv_offset[1] = film_grain->cr_offset;
+
+    return 0;
 }
 
 static int set_output_frame(AVCodecContext *avctx, AVFrame *frame,
@@ -545,9 +808,22 @@ static int set_output_frame(AVCodecContext *avctx, AVFrame *frame,
     const AVFrame *srcframe = s->cur_frame.tf.f;
     int ret;
 
+    // TODO: all layers
+    if (s->operating_point_idc &&
+        av_log2(s->operating_point_idc >> 8) > s->cur_frame.spatial_id)
+        return 0;
+
     ret = av_frame_ref(frame, srcframe);
     if (ret < 0)
         return ret;
+
+    if (avctx->export_side_data & AV_CODEC_EXPORT_DATA_FILM_GRAIN) {
+        ret = export_film_grain(avctx, frame);
+        if (ret < 0) {
+            av_frame_unref(frame);
+            return ret;
+        }
+    }
 
     frame->pts = pkt->pts;
     frame->pkt_dts = pkt->dts;
@@ -600,6 +876,9 @@ static int get_current_frame(AVCodecContext *avctx)
     }
 
     global_motion_params(s);
+    skip_mode_params(s);
+    coded_lossless_param(s);
+    load_grain_params(s);
 
     return ret;
 }
@@ -647,6 +926,8 @@ static int av1_decode_frame(AVCodecContext *avctx, void *frame,
                 s->raw_seq = NULL;
                 goto end;
             }
+
+            s->operating_point_idc = s->raw_seq->operating_point_idc[s->operating_point];
 
             if (s->pix_fmt == AV_PIX_FMT_NONE) {
                 ret = get_pixel_format(avctx);
@@ -818,11 +1099,27 @@ static void av1_decode_flush(AVCodecContext *avctx)
         av1_frame_unref(avctx, &s->ref[i]);
 
     av1_frame_unref(avctx, &s->cur_frame);
+    s->operating_point_idc = 0;
     s->raw_frame_header = NULL;
     s->raw_seq = NULL;
 
     ff_cbs_flush(s->cbc);
 }
+
+#define OFFSET(x) offsetof(AV1DecContext, x)
+#define VD AV_OPT_FLAG_VIDEO_PARAM | AV_OPT_FLAG_DECODING_PARAM
+static const AVOption av1_options[] = {
+    { "operating_point",  "Select an operating point of the scalable bitstream",
+                          OFFSET(operating_point), AV_OPT_TYPE_INT, { .i64 = 0 }, 0, AV1_MAX_OPERATING_POINTS - 1, VD },
+    { NULL }
+};
+
+static const AVClass av1_class = {
+    .class_name = "AV1 decoder",
+    .item_name  = av_default_item_name,
+    .option     = av1_options,
+    .version    = LIBAVUTIL_VERSION_INT,
+};
 
 AVCodec ff_av1_decoder = {
     .name                  = "av1",
@@ -839,7 +1136,23 @@ AVCodec ff_av1_decoder = {
                              FF_CODEC_CAP_SETS_PKT_DTS,
     .flush                 = av1_decode_flush,
     .profiles              = NULL_IF_CONFIG_SMALL(ff_av1_profiles),
-    .hw_configs            = (const AVCodecHWConfigInternal * []) {
+    .priv_class            = &av1_class,
+    .hw_configs            = (const AVCodecHWConfigInternal *const []) {
+#if CONFIG_AV1_DXVA2_HWACCEL
+        HWACCEL_DXVA2(av1),
+#endif
+#if CONFIG_AV1_D3D11VA_HWACCEL
+        HWACCEL_D3D11VA(av1),
+#endif
+#if CONFIG_AV1_D3D11VA2_HWACCEL
+        HWACCEL_D3D11VA2(av1),
+#endif
+#if CONFIG_AV1_NVDEC_HWACCEL
+        HWACCEL_NVDEC(av1),
+#endif
+#if CONFIG_AV1_VAAPI_HWACCEL
+        HWACCEL_VAAPI(av1),
+#endif
         NULL
     },
 };

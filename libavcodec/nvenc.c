@@ -43,12 +43,6 @@
                     rc == NV_ENC_PARAMS_RC_CBR_LOWDELAY_HQ || \
                     rc == NV_ENC_PARAMS_RC_CBR_HQ)
 
-#ifdef NVENC_HAVE_NEW_PRESETS
-#define IS_SDK10_PRESET(p) ((p) >= PRESET_P1 && (p) <= PRESET_P7)
-#else
-#define IS_SDK10_PRESET(p) 0
-#endif
-
 const enum AVPixelFormat ff_nvenc_pix_fmts[] = {
     AV_PIX_FMT_YUV420P,
     AV_PIX_FMT_NV12,
@@ -65,7 +59,7 @@ const enum AVPixelFormat ff_nvenc_pix_fmts[] = {
     AV_PIX_FMT_NONE
 };
 
-const AVCodecHWConfigInternal *ff_nvenc_hw_configs[] = {
+const AVCodecHWConfigInternal *const ff_nvenc_hw_configs[] = {
     HW_CONFIG_ENCODER_FRAMES(CUDA,  CUDA),
     HW_CONFIG_ENCODER_DEVICE(NONE,  CUDA),
 #if CONFIG_D3D11VA
@@ -906,7 +900,7 @@ static av_cold void nvenc_setup_rate_control(AVCodecContext *avctx)
 
     if (ctx->flags & NVENC_ONE_PASS)
         ctx->encode_config.rcParams.multiPass = NV_ENC_MULTI_PASS_DISABLED;
-    if (ctx->flags & NVENC_TWO_PASSES || ctx->twopass)
+    if (ctx->flags & NVENC_TWO_PASSES || ctx->twopass > 0)
         ctx->encode_config.rcParams.multiPass = NV_ENC_TWO_PASS_FULL_RESOLUTION;
 
     if (ctx->rc < 0) {
@@ -914,7 +908,7 @@ static av_cold void nvenc_setup_rate_control(AVCodecContext *avctx)
             ctx->rc = NV_ENC_PARAMS_RC_CBR;
         } else if (ctx->cqp >= 0) {
             ctx->rc = NV_ENC_PARAMS_RC_CONSTQP;
-        } else {
+        } else if (ctx->quality >= 0.0f) {
             ctx->rc = NV_ENC_PARAMS_RC_VBR;
         }
     }
@@ -1268,30 +1262,23 @@ static av_cold int nvenc_setup_encoder(AVCodecContext *avctx)
     preset_config.version = NV_ENC_PRESET_CONFIG_VER;
     preset_config.presetCfg.version = NV_ENC_CONFIG_VER;
 
-    if (IS_SDK10_PRESET(ctx->preset)) {
 #ifdef NVENC_HAVE_NEW_PRESETS
-        ctx->init_encode_params.tuningInfo = ctx->tuning_info;
+    ctx->init_encode_params.tuningInfo = ctx->tuning_info;
 
-        if (ctx->flags & NVENC_LOWLATENCY)
-            ctx->init_encode_params.tuningInfo = NV_ENC_TUNING_INFO_LOW_LATENCY;
+    if (ctx->flags & NVENC_LOWLATENCY)
+        ctx->init_encode_params.tuningInfo = NV_ENC_TUNING_INFO_LOW_LATENCY;
 
-        nv_status = p_nvenc->nvEncGetEncodePresetConfigEx(ctx->nvencoder,
-            ctx->init_encode_params.encodeGUID,
-            ctx->init_encode_params.presetGUID,
-            ctx->init_encode_params.tuningInfo,
-            &preset_config);
+    nv_status = p_nvenc->nvEncGetEncodePresetConfigEx(ctx->nvencoder,
+        ctx->init_encode_params.encodeGUID,
+        ctx->init_encode_params.presetGUID,
+        ctx->init_encode_params.tuningInfo,
+        &preset_config);
+#else
+    nv_status = p_nvenc->nvEncGetEncodePresetConfig(ctx->nvencoder,
+        ctx->init_encode_params.encodeGUID,
+        ctx->init_encode_params.presetGUID,
+        &preset_config);
 #endif
-    } else {
-#ifdef NVENC_HAVE_NEW_PRESETS
-        // Turn off tuning info parameter if older presets are on
-        ctx->init_encode_params.tuningInfo = 0;
-#endif
-
-        nv_status = p_nvenc->nvEncGetEncodePresetConfig(ctx->nvencoder,
-            ctx->init_encode_params.encodeGUID,
-            ctx->init_encode_params.presetGUID,
-            &preset_config);
-    }
     if (nv_status != NV_ENC_SUCCESS)
         return nvenc_print_error(avctx, nv_status, "Cannot get the preset configuration");
 
@@ -1934,7 +1921,7 @@ static int nvenc_set_timestamp(AVCodecContext *avctx,
     pkt->pts = params->outputTimeStamp;
     pkt->dts = timestamp_queue_dequeue(ctx->timestamp_list);
 
-    pkt->dts -= FFMAX(avctx->max_b_frames, 0) * FFMIN(avctx->ticks_per_frame, 1);
+    pkt->dts -= FFMAX(avctx->max_b_frames, 0) * FFMAX(avctx->ticks_per_frame, 1);
 
     return 0;
 }
@@ -2260,7 +2247,7 @@ static int nvenc_send_frame(AVCodecContext *avctx, const AVFrame *frame)
 
             if (tc_data) {
                 sei_data[sei_count].payloadSize = (uint32_t)tc_size;
-                sei_data[sei_count].payloadType = HEVC_SEI_TYPE_TIME_CODE;
+                sei_data[sei_count].payloadType = SEI_TYPE_TIME_CODE;
                 sei_data[sei_count].payload = (uint8_t*)tc_data;
                 sei_count ++;
             }
