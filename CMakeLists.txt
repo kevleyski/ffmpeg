@@ -4,6 +4,8 @@ project(ffmpeg)
 set(CMAKE_CXX_STANDARD 14)
 
 include_directories(.)
+include_directories(../srt)
+include_directories(../srt/srtcore)
 include_directories(aom-master/aom)
 include_directories(aom-master/aom/internal)
 include_directories(aom-master/aom_dsp)

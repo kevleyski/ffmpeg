@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/FFmpeg.iml" filepath="$PROJECT_DIR$/.idea/FFmpeg.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/ffmpeg.iml" filepath="$PROJECT_DIR$/.idea/ffmpeg.iml" />
     </modules>
   </component>
 </project>
