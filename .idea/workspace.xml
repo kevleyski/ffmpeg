@@ -25,18 +25,25 @@
     <select />
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
-    <generated />
+    <generated>
+      <config projectName="ffmpeg" targetName="ffmpeg" />
+    </generated>
   </component>
   <component name="CMakeSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" ENABLED="true" />
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45ec317e-9f74-4354-bd97-bc2630dc4cad" name="Default Changelist" comment="">
+    <list default="true" id="45ec317e-9f74-4354-bd97-bc2630dc4cad" name="Default Changelist" comment="KJSL: FFmpeg debug">
+      <change afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/FFmpeg.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/FFmpeg.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/ffprobe.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/ffprobe.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/third_party/libwebm/AUTHORS.TXT" beforeDir="false" afterPath="$PROJECT_DIR$/aom-master/third_party/libwebm/AUTHORS.TXT" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kjsl_build_osx_noav1.sh" beforeDir="false" afterPath="$PROJECT_DIR$/kjsl_build_osx_noav1.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kjsl_build_osx_dev.sh" beforeDir="false" afterPath="$PROJECT_DIR$/kjsl_build_osx_dev.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libavcodec/ac3_parser.c" beforeDir="false" afterPath="$PROJECT_DIR$/libavcodec/ac3_parser.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,11 +65,15 @@
     <option name="directoryName" value="csoBwusy" />
   </component>
   <component name="ProjectId" id="1ckM1TQC4dHKogzrWb7wA4Tgvut" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
@@ -78,43 +89,25 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="CLionExternalConfigurable" />
+    <property name="settings.editor.selected.configurable" value="fileTemplates" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Makefile.Makefile">
-    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true">
+  <component name="RunManager" selected="BashSupport Pro.kjsl_build_osx_noav1.sh">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
-    </configuration>
-    <configuration name="Makefile (1)" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
-      <makefile filename="$PROJECT_DIR$/Makefile" target="" workingDirectory="" arguments="">
-        <envs />
-      </makefile>
-      <method v="2" />
-    </configuration>
-    <configuration name="Makefile (2)" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
-      <makefile filename="$PROJECT_DIR$/Makefile" target="" workingDirectory="" arguments="">
-        <envs />
-      </makefile>
-      <method v="2" />
-    </configuration>
-    <configuration name="Makefile (3)" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
-      <makefile filename="$PROJECT_DIR$/Makefile" target="" workingDirectory="" arguments="">
-        <envs />
-      </makefile>
-      <method v="2" />
-    </configuration>
-    <configuration name="Makefile (4)" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
-      <makefile filename="$PROJECT_DIR$/Makefile" target="" workingDirectory="" arguments="">
-        <envs />
-      </makefile>
-      <method v="2" />
     </configuration>
     <configuration name="Makefile" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
       <makefile filename="$PROJECT_DIR$/Makefile" target="" workingDirectory="" arguments="">
@@ -122,31 +115,40 @@
       </makefile>
       <method v="2" />
     </configuration>
-    <configuration name="ffprobe" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile">
-      <makefile filename="$PROJECT_DIR$/Makefile" target="ffprobe" workingDirectory="" arguments="">
+    <configuration name="alltools" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/ffbuild/common.mak" target="alltools" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="build" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="build" workingDirectory="" arguments="">
         <envs />
       </makefile>
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="BashSupport Pro.kjsl_build_osx_dev.sh" />
+      <item itemvalue="BashSupport Pro.kjsl_build_osx_noav1.sh" />
+      <item itemvalue="CMake Application.ffmpeg" />
       <item itemvalue="Custom Build Application.ffplay" />
       <item itemvalue="Custom Build Application.ffmpeg" />
       <item itemvalue="Custom Build Application.ffprobe" />
+      <item itemvalue="Custom Build Application.ffprobe srt" />
       <item itemvalue="Custom Build Application.ffmpeg (hls discos)" />
       <item itemvalue="Makefile.ffprobe" />
       <item itemvalue="Makefile.Makefile" />
-      <item itemvalue="Makefile.Makefile (1)" />
-      <item itemvalue="Makefile.Makefile (2)" />
-      <item itemvalue="Makefile.Makefile (3)" />
-      <item itemvalue="Makefile.Makefile (4)" />
+      <item itemvalue="Makefile.build" />
+      <item itemvalue="Makefile.alltools" />
+      <item itemvalue="Makefile.all" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Makefile.Makefile" />
-        <item itemvalue="Makefile.Makefile (4)" />
-        <item itemvalue="Makefile.Makefile (3)" />
-        <item itemvalue="Makefile.Makefile (2)" />
-        <item itemvalue="Makefile.Makefile (1)" />
+        <item itemvalue="Makefile.all" />
+        <item itemvalue="BashSupport Pro.kjsl_build_osx_noav1.sh" />
+        <item itemvalue="BashSupport Pro.kjsl_build_osx_dev.sh" />
+        <item itemvalue="Makefile.alltools" />
+        <item itemvalue="Makefile.build" />
       </list>
     </recent_temporary>
   </component>
@@ -174,7 +176,9 @@
       <workItem from="1567803371126" duration="2079000" />
       <workItem from="1591067924121" duration="196000" />
       <workItem from="1603923904543" duration="970000" />
-      <workItem from="1604366292295" duration="935000" />
+      <workItem from="1604366292295" duration="2552000" />
+      <workItem from="1604369282873" duration="2021000" />
+      <workItem from="1613779368944" duration="3056000" />
     </task>
     <task id="LOCAL-00001" summary="[KJSL] HLS discos issue&#10;Adding force_dts_monotonicity from&#10;https://ffmpeg.org/pipermail/ffmpeg-devel/2018-March/226706.html&#10;http://ffmpeg.org/pipermail/ffmpeg-devel/attachments/20180316/739542e4/attachment.obj">
       <created>1567811310694</created>
@@ -183,7 +187,14 @@
       <option name="project" value="LOCAL" />
       <updated>1567811310694</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="KJSL: FFmpeg debug">
+      <created>1604367258370</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1604367258370</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TodoView">
@@ -221,30 +232,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="[KJSL] HLS discos issue&#10;Adding force_dts_monotonicity from&#10;https://ffmpeg.org/pipermail/ffmpeg-devel/2018-March/226706.html&#10;http://ffmpeg.org/pipermail/ffmpeg-devel/attachments/20180316/739542e4/attachment.obj" />
-    <option name="LAST_COMMIT_MESSAGE" value="[KJSL] HLS discos issue&#10;Adding force_dts_monotonicity from&#10;https://ffmpeg.org/pipermail/ffmpeg-devel/2018-March/226706.html&#10;http://ffmpeg.org/pipermail/ffmpeg-devel/attachments/20180316/739542e4/attachment.obj" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state width="2262" height="391" key="GridCell.Tab.0.bottom" timestamp="1604366539216">
-      <screen x="0" y="23" width="2304" height="1362" />
-    </state>
-    <state width="2262" height="391" key="GridCell.Tab.0.bottom/0.23.2304.1362@0.23.2304.1362" timestamp="1604366539216" />
-    <state width="2262" height="391" key="GridCell.Tab.0.center" timestamp="1604366539215">
-      <screen x="0" y="23" width="2304" height="1362" />
-    </state>
-    <state width="2262" height="391" key="GridCell.Tab.0.center/0.23.2304.1362@0.23.2304.1362" timestamp="1604366539215" />
-    <state width="2262" height="391" key="GridCell.Tab.0.left" timestamp="1604366539214">
-      <screen x="0" y="23" width="2304" height="1362" />
-    </state>
-    <state width="2262" height="391" key="GridCell.Tab.0.left/0.23.2304.1362@0.23.2304.1362" timestamp="1604366539214" />
-    <state width="2262" height="391" key="GridCell.Tab.0.right" timestamp="1604366539215">
-      <screen x="0" y="23" width="2304" height="1362" />
-    </state>
-    <state width="2262" height="391" key="GridCell.Tab.0.right/0.23.2304.1362@0.23.2304.1362" timestamp="1604366539215" />
-    <state x="859" y="459" width="586" height="490" key="find.popup" timestamp="1604366304995">
-      <screen x="0" y="23" width="2304" height="1362" />
-    </state>
-    <state x="859" y="459" width="586" height="490" key="find.popup/0.23.2304.1362@0.23.2304.1362" timestamp="1604366304995" />
+    <MESSAGE value="KJSL: FFmpeg debug" />
+    <option name="LAST_COMMIT_MESSAGE" value="KJSL: FFmpeg debug" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -386,75 +377,84 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/libavcodec/mjpegdec.c</url>
-          <line>2268</line>
+          <line>2286</line>
           <option name="timeStamp" value="30" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/fftools/ffprobe.c</url>
-          <line>3692</line>
+          <line>3795</line>
           <option name="timeStamp" value="34" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/fftools/ffprobe.c</url>
-          <line>2986</line>
+          <line>3089</line>
           <option name="timeStamp" value="35" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/fftools/ffprobe.c</url>
-          <line>2993</line>
+          <line>3096</line>
           <option name="timeStamp" value="36" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/fftools/ffprobe.c</url>
-          <line>3007</line>
+          <line>3110</line>
           <option name="timeStamp" value="37" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/fftools/ffprobe.c</url>
-          <line>2991</line>
+          <line>3094</line>
           <option name="timeStamp" value="38" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/fftools/ffprobe.c</url>
-          <line>2388</line>
+          <line>2491</line>
           <option name="timeStamp" value="39" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/libavcodec/hevcdec.c</url>
-          <line>3192</line>
+          <line>3216</line>
           <option name="timeStamp" value="43" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/libavcodec/mdec.c</url>
-          <line>172</line>
+          <line>174</line>
           <option name="timeStamp" value="44" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/libavcodec/h263dec.c</url>
-          <line>423</line>
+          <line>424</line>
           <option name="timeStamp" value="45" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/libavcodec/mpeg12dec.c</url>
-          <line>2779</line>
+          <line>2777</line>
           <option name="timeStamp" value="48" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/fftools/ffmpeg.c</url>
-          <line>4469</line>
+          <line>4561</line>
           <option name="timeStamp" value="49" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/fftools/ffmpeg.c</url>
-          <line>4515</line>
+          <line>4607</line>
           <option name="timeStamp" value="50" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/libavcodec/allcodecs.c</url>
-          <line>943</line>
-          <option name="timeStamp" value="51" />
+          <url>file://$PROJECT_DIR$/libavcodec/tests/avpacket.c</url>
+          <line>86</line>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/fftools/ffprobe.c</url>
+          <line>3003</line>
+          <option name="timeStamp" value="56" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

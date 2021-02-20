@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ffmpeg" type="CLionExternalRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-i $PROJECT_DIR$/../streama/media/baseline_720_avc.ts -copyts kevs.ts" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ffmpeg" TARGET_NAME="FFmpeg" CONFIG_NAME="FFmpeg" RUN_PATH="$PROJECT_DIR$/ffmpeg_g">
+  <configuration default="false" name="ffmpeg" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ffmpeg" TARGET_NAME="ffmpeg" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="ffmpeg" RUN_TARGET_NAME="ffmpeg">
     <method v="2">
-      <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
     </method>
   </configuration>
 </component>
