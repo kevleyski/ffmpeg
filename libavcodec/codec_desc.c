@@ -27,7 +27,6 @@
 #include "codec_id.h"
 #include "codec_desc.h"
 #include "profiles.h"
-#include "version.h"
 
 #define MT(...) (const char *const[]){ __VA_ARGS__, NULL }
 
@@ -1842,6 +1841,20 @@ static const AVCodecDescriptor codec_descriptors[] = {
         .long_name = NULL_IF_CONFIG_SMALL("Cintel RAW"),
         .props     = AV_CODEC_PROP_INTRA_ONLY | AV_CODEC_PROP_LOSSY | AV_CODEC_PROP_LOSSLESS,
     },
+    {
+        .id        = AV_CODEC_ID_SIMBIOSIS_IMX,
+        .type      = AVMEDIA_TYPE_VIDEO,
+        .name      = "simbiosis_imx",
+        .long_name = NULL_IF_CONFIG_SMALL("Simbiosis Interactive IMX Video"),
+        .props     = AV_CODEC_PROP_LOSSY,
+    },
+    {
+        .id        = AV_CODEC_ID_SGA_VIDEO,
+        .type      = AVMEDIA_TYPE_VIDEO,
+        .name      = "sga",
+        .long_name = NULL_IF_CONFIG_SMALL("Digital Pictures SGA Video"),
+        .props     = AV_CODEC_PROP_LOSSY,
+    },
 
     /* various PCM "codecs" */
     {
@@ -2088,6 +2101,13 @@ static const AVCodecDescriptor codec_descriptors[] = {
         .name      = "pcm_vidc",
         .long_name = NULL_IF_CONFIG_SMALL("PCM Archimedes VIDC"),
         .props     = AV_CODEC_PROP_INTRA_ONLY | AV_CODEC_PROP_LOSSY,
+    },
+    {
+        .id        = AV_CODEC_ID_PCM_SGA,
+        .type      = AVMEDIA_TYPE_AUDIO,
+        .name      = "pcm_sga",
+        .long_name = NULL_IF_CONFIG_SMALL("PCM SGA"),
+        .props     = AV_CODEC_PROP_INTRA_ONLY | AV_CODEC_PROP_LOSSLESS,
     },
 
     /* various ADPCM codecs */
@@ -2441,6 +2461,13 @@ static const AVCodecDescriptor codec_descriptors[] = {
         .long_name = NULL_IF_CONFIG_SMALL("ADPCM IMA MobiClip MOFLEX"),
         .props     = AV_CODEC_PROP_INTRA_ONLY | AV_CODEC_PROP_LOSSY,
     },
+    {
+        .id        = AV_CODEC_ID_ADPCM_IMA_ACORN,
+        .type      = AVMEDIA_TYPE_AUDIO,
+        .name      = "adpcm_ima_acorn",
+        .long_name = NULL_IF_CONFIG_SMALL("ADPCM IMA Acorn Replay"),
+        .props     = AV_CODEC_PROP_INTRA_ONLY | AV_CODEC_PROP_LOSSY,
+    },
 
     /* AMR */
     {
@@ -2737,7 +2764,7 @@ static const AVCodecDescriptor codec_descriptors[] = {
         .type      = AVMEDIA_TYPE_AUDIO,
         .name      = "mlp",
         .long_name = NULL_IF_CONFIG_SMALL("MLP (Meridian Lossless Packing)"),
-        .props     = AV_CODEC_PROP_INTRA_ONLY | AV_CODEC_PROP_LOSSLESS,
+        .props     = AV_CODEC_PROP_LOSSLESS,
     },
     {
         .id        = AV_CODEC_ID_GSM_MS,
@@ -3193,6 +3220,13 @@ static const AVCodecDescriptor codec_descriptors[] = {
         .type      = AVMEDIA_TYPE_AUDIO,
         .name      = "fastaudio",
         .long_name = NULL_IF_CONFIG_SMALL("MobiClip FastAudio"),
+        .props     = AV_CODEC_PROP_INTRA_ONLY | AV_CODEC_PROP_LOSSY,
+    },
+    {
+        .id        = AV_CODEC_ID_MSNSIREN,
+        .type      = AVMEDIA_TYPE_AUDIO,
+        .name      = "msnsiren",
+        .long_name = NULL_IF_CONFIG_SMALL("MSN Siren"),
         .props     = AV_CODEC_PROP_INTRA_ONLY | AV_CODEC_PROP_LOSSY,
     },
 
