@@ -70,6 +70,9 @@ typedef struct TestSourceContext {
     /* only used by testsrc2 */
     int alpha;
 
+    /* only used by colorspectrum */
+    int type;
+
     /* only used by color */
     FFDrawContext draw;
     FFDrawColor color;
@@ -303,30 +306,20 @@ static void haldclutsrc_fill_picture(AVFilterContext *ctx, AVFrame *frame)
     const uint8_t *data = frame->data[0];
     const int linesize  = frame->linesize[0];
     const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(frame->format);
+    const int depth = desc->comp[0].depth;
+    const int planar = desc->flags & AV_PIX_FMT_FLAG_PLANAR;
+    const int planes = av_pix_fmt_count_planes(frame->format);
     uint8_t rgba_map[4];
 
     av_assert0(w == h && w == level*level*level);
 
     ff_fill_rgba_map(rgba_map, frame->format);
 
-    switch (frame->format) {
-    case AV_PIX_FMT_RGB48:
-    case AV_PIX_FMT_BGR48:
-    case AV_PIX_FMT_RGBA64:
-    case AV_PIX_FMT_BGRA64:
-        is16bit = 1;
-        alpha = 0xffff;
-        break;
-    case AV_PIX_FMT_RGBA:
-    case AV_PIX_FMT_BGRA:
-    case AV_PIX_FMT_ARGB:
-    case AV_PIX_FMT_ABGR:
-        alpha = 0xff;
-        break;
-    }
+    alpha = (1 << depth) - 1;
+    is16bit = depth > 8;
 
     step  = av_get_padded_bits_per_pixel(desc) >> (3 + is16bit);
-    scale = ((float)(1 << (8*(is16bit+1))) - 1) / (level*level - 1);
+    scale = ((float)alpha) / (level*level - 1);
 
 #define LOAD_CLUT(nbits) do {                                                   \
     uint##nbits##_t *dst = ((uint##nbits##_t *)(data + y*linesize)) + x*step;   \
@@ -337,14 +330,38 @@ static void haldclutsrc_fill_picture(AVFilterContext *ctx, AVFrame *frame)
         dst[rgba_map[3]] = alpha;                                               \
 } while (0)
 
+#define LOAD_CLUT_PLANAR(type, nbits) do {                                      \
+    type *dst = ((type *)(frame->data[2] + y*frame->linesize[2])) + x;          \
+    dst[0] = av_clip_uintp2(i * scale, nbits);                                  \
+    dst = ((type *)(frame->data[0] + y*frame->linesize[0])) + x;                \
+    dst[0] = av_clip_uintp2(j * scale, nbits);                                  \
+    dst = ((type *)(frame->data[1] + y*frame->linesize[1])) + x;                \
+    dst[0] = av_clip_uintp2(k * scale, nbits);                                  \
+    if (planes == 4) {                                                          \
+        dst = ((type *)(frame->data[3] + y*linesize)) + x;                      \
+        dst[0] = alpha;                                                         \
+    }                                                                           \
+} while (0)
+
     level *= level;
     for (k = 0; k < level; k++) {
         for (j = 0; j < level; j++) {
             for (i = 0; i < level; i++) {
-                if (!is16bit)
-                    LOAD_CLUT(8);
-                else
-                    LOAD_CLUT(16);
+                if (!planar) {
+                    if (!is16bit)
+                        LOAD_CLUT(8);
+                    else
+                        LOAD_CLUT(16);
+                } else {
+                    switch (depth) {
+                    case  8: LOAD_CLUT_PLANAR(uint8_t,  8); break;
+                    case  9: LOAD_CLUT_PLANAR(uint16_t, 9); break;
+                    case 10: LOAD_CLUT_PLANAR(uint16_t,10); break;
+                    case 12: LOAD_CLUT_PLANAR(uint16_t,12); break;
+                    case 14: LOAD_CLUT_PLANAR(uint16_t,14); break;
+                    case 16: LOAD_CLUT_PLANAR(uint16_t,16); break;
+                    }
+                }
                 if (++x == w) {
                     x = 0;
                     y++;
@@ -370,6 +387,12 @@ static const enum AVPixelFormat haldclutsrc_pix_fmts[] = {
     AV_PIX_FMT_RGB0,   AV_PIX_FMT_BGR0,
     AV_PIX_FMT_RGB48,  AV_PIX_FMT_BGR48,
     AV_PIX_FMT_RGBA64, AV_PIX_FMT_BGRA64,
+    AV_PIX_FMT_GBRP,   AV_PIX_FMT_GBRAP,
+    AV_PIX_FMT_GBRP9,
+    AV_PIX_FMT_GBRP10, AV_PIX_FMT_GBRAP10,
+    AV_PIX_FMT_GBRP12, AV_PIX_FMT_GBRAP12,
+    AV_PIX_FMT_GBRP14,
+    AV_PIX_FMT_GBRP16, AV_PIX_FMT_GBRAP16,
     AV_PIX_FMT_NONE,
 };
 
@@ -1771,3 +1794,92 @@ const AVFilter ff_vsrc_allrgb = {
 };
 
 #endif /* CONFIG_ALLRGB_FILTER */
+
+#if CONFIG_COLORSPECTRUM_FILTER
+
+static const AVOption colorspectrum_options[] = {
+    COMMON_OPTIONS
+    { "type", "set the color spectrum type", OFFSET(type), AV_OPT_TYPE_INT, {.i64=0}, 0, 2, FLAGS, "type" },
+    { "black","fade to black",               0,            AV_OPT_TYPE_CONST,{.i64=0},0, 0, FLAGS, "type" },
+    { "white","fade to white",               0,            AV_OPT_TYPE_CONST,{.i64=1},0, 0, FLAGS, "type" },
+    { "all",  "white to black",              0,            AV_OPT_TYPE_CONST,{.i64=2},0, 0, FLAGS, "type" },
+    { NULL }
+};
+
+AVFILTER_DEFINE_CLASS(colorspectrum);
+
+static inline float mix(float a, float b, float mix)
+{
+    return a * mix + b * (1.f - mix);
+}
+
+static void hsb2rgb(const float *c, float *rgb)
+{
+    rgb[0] = av_clipf(fabsf(fmodf(c[0] * 6.f + 0.f, 6.f) - 3.f) - 1.f, 0.f, 1.f);
+    rgb[1] = av_clipf(fabsf(fmodf(c[0] * 6.f + 4.f, 6.f) - 3.f) - 1.f, 0.f, 1.f);
+    rgb[2] = av_clipf(fabsf(fmodf(c[0] * 6.f + 2.f, 6.f) - 3.f) - 1.f, 0.f, 1.f);
+    rgb[0] = mix(c[3], (rgb[0] * rgb[0] * (3.f - 2.f * rgb[0])), c[1]) * c[2];
+    rgb[1] = mix(c[3], (rgb[1] * rgb[1] * (3.f - 2.f * rgb[1])), c[1]) * c[2];
+    rgb[2] = mix(c[3], (rgb[2] * rgb[2] * (3.f - 2.f * rgb[2])), c[1]) * c[2];
+}
+
+static void colorspectrum_fill_picture(AVFilterContext *ctx, AVFrame *frame)
+{
+    TestSourceContext *test = ctx->priv;
+    const float w = frame->width - 1.f;
+    const float h = frame->height - 1.f;
+    float c[4];
+
+    for (int y = 0; y < frame->height; y++) {
+        float *r = (float *)(frame->data[2] + y * frame->linesize[2]);
+        float *g = (float *)(frame->data[0] + y * frame->linesize[0]);
+        float *b = (float *)(frame->data[1] + y * frame->linesize[1]);
+        const float yh = y / h;
+
+        c[1] = test->type == 2 ? yh > 0.5f ? 2.f * (yh - 0.5f) : 1.f - 2.f * yh : test->type == 1 ? 1.f - yh : yh;
+        c[2] = 1.f;
+        c[3] = test->type == 1 ? 1.f : test->type == 2 ? (yh > 0.5f ? 0.f : 1.f): 0.f;
+        for (int x = 0; x < frame->width; x++) {
+            float rgb[3];
+
+            c[0] = x / w;
+            hsb2rgb(c, rgb);
+
+            r[x] = rgb[0];
+            g[x] = rgb[1];
+            b[x] = rgb[2];
+        }
+    }
+}
+
+static av_cold int colorspectrum_init(AVFilterContext *ctx)
+{
+    TestSourceContext *test = ctx->priv;
+
+    test->draw_once = 1;
+    test->fill_picture_fn = colorspectrum_fill_picture;
+    return init(ctx);
+}
+
+static const AVFilterPad avfilter_vsrc_colorspectrum_outputs[] = {
+    {
+        .name          = "default",
+        .type          = AVMEDIA_TYPE_VIDEO,
+        .config_props  = config_props,
+    },
+};
+
+const AVFilter ff_vsrc_colorspectrum = {
+    .name          = "colorspectrum",
+    .description   = NULL_IF_CONFIG_SMALL("Generate colors spectrum."),
+    .priv_size     = sizeof(TestSourceContext),
+    .priv_class    = &colorspectrum_class,
+    .init          = colorspectrum_init,
+    .uninit        = uninit,
+    .activate      = activate,
+    .inputs        = NULL,
+    FILTER_OUTPUTS(avfilter_vsrc_colorspectrum_outputs),
+    FILTER_SINGLE_PIXFMT(AV_PIX_FMT_GBRPF32),
+};
+
+#endif /* CONFIG_COLORSPECTRUM_FILTER */
