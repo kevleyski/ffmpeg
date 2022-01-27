@@ -85,7 +85,7 @@ RUN set -x \
     && cd ~/kjsl \
     && git clone https://github.com/kevleyski/x264 \
     && cd x264 \
-    && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/r0s1e/lib/pkgconfig" ./configure  --enable-static \
+    && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure  --enable-static \
     && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
     && make install
 
@@ -95,7 +95,7 @@ RUN set -x \
     && git clone https://github.com/MetaCDN/fdk-aac \
     && cd fdk-aac \
     && autoreconf -fiv \
-    && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/r0s1e/lib/pkgconfig" ./configure  --enable-static --disable-shared \
+    && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure  --enable-static --disable-shared \
     && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
     && make install
 
