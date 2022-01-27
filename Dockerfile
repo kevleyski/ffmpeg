@@ -124,7 +124,7 @@ FROM kjsl_ubuntu18_baseline AS kjsl_ffmpeg
 COPY . /root/kjsl/ffmpeg/
 
 RUN cd $HOME/kjsl/ffmpeg \
-    && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure \
+    && PATH="$HOME/bin:/usr/local/cuda-11.6/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure \
       --prefix="$HOME/kjsl" \
       --extra-cflags="-I$HOME/kjsl/include" \
       --extra-ldflags="-L$HOME/kjsl/lib" \
@@ -147,6 +147,6 @@ RUN cd $HOME/kjsl/ffmpeg \
       --enable-nvenc \
       --disable-doc \
       --pkg-config-flags="--static" \
-    && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
+    && PATH="$HOME/bin:/usr/local/cuda-11.6/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
     && make install \
     && hash -r
