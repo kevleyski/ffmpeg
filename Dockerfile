@@ -23,8 +23,7 @@ RUN set -x \
     && cd yasm-1.3.0 \
     && ./configure --prefix="$HOME/kjsl" --bindir="$HOME/bin" \
     && make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
-    && make install \
-    && make distclean
+    && make install
 
 # Intel VAAPI
 RUN set -x \
@@ -34,8 +33,7 @@ RUN set -x \
     && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./autogen.sh \
     && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure --prefix="$HOME/kjsl" \
     && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
-    && make install \
-    && make clean
+    && make install
 
 RUN set -x \
     && cd ~/kjsl \
@@ -44,8 +42,7 @@ RUN set -x \
     && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./autogen.sh \
     && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure --prefix="$HOME/kjsl" \
     && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
-    && make install \
-    && make clean
+    && make install
 
 RUN set -x \
     && cd ~/kjsl \
@@ -54,8 +51,7 @@ RUN set -x \
     && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./autogen.sh \
     && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure --prefix="$HOME/kjsl" \
     && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
-    && make install \
-    && make clean
+    && make install
 
 RUN set -x \
     && cd ~/kjsl \
@@ -64,8 +60,7 @@ RUN set -x \
     && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./autogen.sh \
     && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure --prefix="$HOME/kjsl" \
     && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
-    && make install \
-    && make clean
+    && make install
 
 RUN set -x \
     && cd ~/kjsl \
@@ -74,8 +69,7 @@ RUN set -x \
     && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./autogen.sh \
     && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure --prefix="$HOME/kjsl" \
     && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
-    && make install \
-    && make clean
+    && make install
 
 # libSRT (dependency /usr/bin/tclsh)
 RUN set -x \
@@ -84,17 +78,33 @@ RUN set -x \
     && cd srt \
     && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure --prefix="$HOME/kjsl" --enable-static --disable-shared \
     && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
-    && make install \
-    && make clean
+    && make install
+
+# x264 software encoder
+RUN set -x \
+    && cd ~/kjsl \
+    && git clone https://github.com/kevleyski/x264 \
+    && cd x264 \
+    && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/r0s1e/lib/pkgconfig" ./configure  --enable-static \
+    && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
+    && make install
+
+# FDK_AAC
+RUN set -x \
+    && cd ~/kjsl \
+    && git clone https://github.com/MetaCDN/fdk-aac \
+    && cd fdk-aac \
+    && autoreconf -fiv \
+    && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/r0s1e/lib/pkgconfig" ./configure  --enable-static --disable-shared \
+    && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
+    && make install
 
 ## Build FFmpeg
 FROM kjsl_ubuntu18_baseline AS kjsl_ffmpeg
-RUN mkdir ~/kjsl/ffmpeg
 
-COPY . ~/kjsl/ffmpeg
+COPY . /root/kjsl/ffmpeg/
 
-RUN cd ~/kjsl \
-    && cd ffmpeg \
+RUN cd $HOME/kjsl/ffmpeg \
     && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure \
       --prefix="$HOME/kjsl" \
       --extra-cflags="-I$HOME/kjsl/include" \
@@ -117,5 +127,4 @@ RUN cd ~/kjsl \
       --pkg-config-flags="--static" \
     && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
     && make install \
-    && make distclean \
     && hash -r

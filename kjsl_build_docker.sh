@@ -8,6 +8,17 @@ HERE=$PWD
 IMAGE_STATE=$(docker images -q kjsl_ffmpeg_build:latest 2> /dev/null)
 RUN_STATE=$(docker ps -qf "ancestor=kjsl_ffmpeg_build")
 
+whack_docker_image() {
+  if [[ "$RUN_STATE" != "" ]]; then
+    docker stop $RUN_STATE
+  fi
+  RUN_STATE=
+  if [[ "$IMAGE_STATE" != "" ]]; then
+    docker image rm -f $IMAGE_STATE
+  fi
+  IMAGE_STATE=
+}
+
 create_docker_image () {
   if [[ "$IMAGE_STATE" == "" ]]; then
     docker build -t kjsl_ffmpeg_build .
@@ -30,5 +41,6 @@ run_docker_container () {
   docker exec -i -t "$RUN_STATE" /bin/bash
 }
 
+#whack_docker_image
 create_docker_image
 run_docker_container
