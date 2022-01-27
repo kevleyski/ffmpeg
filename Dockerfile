@@ -142,6 +142,7 @@ RUN cd $HOME/kjsl/ffmpeg \
       --enable-openssl \
       --enable-libsrt \
       --enable-libfreetype \
+      --enable-libfdk_aac \
       --enable-cuda-sdk \
       --enable-cuvid \
       --enable-nvenc \
