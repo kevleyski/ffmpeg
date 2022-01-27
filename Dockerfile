@@ -99,6 +99,24 @@ RUN set -x \
     && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
     && make install
 
+# NVIDIA CUDA SDK
+RUN set -x \
+    && cd ~/kjsl \
+    && wget -c -v -nc https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-repo-ubuntu1604_9.2.88-1_amd64.deb \
+    && dpkg -i cuda-repo-ubuntu1604_9.2.88-1_amd64.deb \
+    && apt-key adv --fetch-keys http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/7fa2af80.pub \
+    && apt-get -y update \
+    && apt-get -y install cuda \
+    && add-apt-repository ppa:graphics-drivers/ppa
+
+# NVIDIA NVENC SDK
+RUN set -x \
+    && cd ~/kjsl \
+    && git clone https://git.videolan.org/git/ffmpeg/nv-codec-headers.git \
+    && cd nv-codec-headers \
+    && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
+    && make install
+
 ## Build FFmpeg
 FROM kjsl_ubuntu18_baseline AS kjsl_ffmpeg
 
@@ -123,6 +141,9 @@ RUN cd $HOME/kjsl/ffmpeg \
       --enable-openssl \
       --enable-libsrt \
       --enable-libfreetype \
+      --enable-cuda-sdk \
+      --enable-cuvid \
+      --enable-nvenc \
       --disable-doc \
       --pkg-config-flags="--static" \
     && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
