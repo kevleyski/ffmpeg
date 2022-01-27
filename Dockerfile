@@ -88,30 +88,34 @@ RUN set -x \
     && make clean
 
 ## Build FFmpeg
-#FROM kjsl_ubuntu18_baseline AS kjsl_ffmpeg
-#RUN cd ~/kjsl \
-#    && cd ffmpeg \
-#    && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure \
-#      --prefix="$HOME/kjsl" \
-#      --extra-cflags="-I$HOME/kjsl/include" \
-#      --extra-ldflags="-L$HOME/kjsl/lib" \
-#      --extra-libs="-lpthread -lm" \
-#      --bindir="$HOME/kjsl/bin" \
-#      --enable-ffplay \
-#      --enable-gpl \
-#      --disable-libxcb \
-#      --disable-xlib \
-#      --disable-lzma \
-#      --disable-alsa \
-#      --enable-libx264 \
-#      --enable-vaapi \
-#      --enable-nonfree \
-#      --enable-openssl \
-#      --enable-libsrt \
-#      --enable-libfreetype \
-#      --disable-doc \
-#      --pkg-config-flags="--static" \
-#    && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
-#    && make install \
-#    && make distclean \
-#    && hash -r
+FROM kjsl_ubuntu18_baseline AS kjsl_ffmpeg
+RUN mkdir ~/kjsl/ffmpeg
+
+COPY . ~/kjsl/ffmpeg
+
+RUN cd ~/kjsl \
+    && cd ffmpeg \
+    && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure \
+      --prefix="$HOME/kjsl" \
+      --extra-cflags="-I$HOME/kjsl/include" \
+      --extra-ldflags="-L$HOME/kjsl/lib" \
+      --extra-libs="-lpthread -lm" \
+      --bindir="$HOME/kjsl/bin" \
+      --enable-ffplay \
+      --enable-gpl \
+      --disable-libxcb \
+      --disable-xlib \
+      --disable-lzma \
+      --disable-alsa \
+      --enable-libx264 \
+      --enable-vaapi \
+      --enable-nonfree \
+      --enable-openssl \
+      --enable-libsrt \
+      --enable-libfreetype \
+      --disable-doc \
+      --pkg-config-flags="--static" \
+    && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
+    && make install \
+    && make distclean \
+    && hash -r

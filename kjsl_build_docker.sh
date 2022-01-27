@@ -17,7 +17,7 @@ create_docker_image () {
 run_docker_container () {
   if [[ "$RUN_STATE" == "" ]]; then
     echo "Spinning up new Kev's FFmpeg build container"
-    docker run --rm --name kjsl_ffmpeg_build --cap-add sys_ptrace -p127.0.0.1:2222:22 -d -v "$HERE:/host" kjsl_ffmpeg_build
+    docker run -i --rm --name kjsl_ffmpeg_build --cap-add sys_ptrace -p127.0.0.1:2222:22 -d -v "$HERE:/host" kjsl_ffmpeg_build
     sleep 2
 
     # update running state image id to be the newly created Docker container
