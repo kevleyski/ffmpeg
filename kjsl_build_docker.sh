@@ -23,7 +23,7 @@ run_docker_container () {
     # update running state image id to be the newly created Docker container
     RUN_STATE=$(docker ps -qf "ancestor=kjsl_ffmpeg_build")
 
-    ssh-keygen -f "$HOME/.ssh/known_hosts" -R [localhost]:2222ls
+    ssh-keygen -f "$HOME/.ssh/known_hosts" -R [localhost]:2222
   fi
 
   echo "Rejoining Kev's FFmpeg build container $RUN_STATE"
