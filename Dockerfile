@@ -6,10 +6,10 @@ MAINTAINER kevleyski
 # Pull in build cross compiler tool dependencies using Advanced Package Tool
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Australia/Sydney
-RUN apt-get update && apt-get install -y tzdata
 
 RUN set -x \
-    && DEBIAN_FRONTEND=noninteractive apt-get --fix-missing -y install wget curl autoconf automake build-essential libass-dev libfreetype6-dev \
+    && apt-get update \
+    && DEBIAN_FRONTEND=noninteractive apt-get --fix-missing -y install tzdata wget curl autoconf automake build-essential libass-dev libfreetype6-dev \
                                             libsdl1.2-dev libtheora-dev libtool libva-dev libvdpau-dev libvorbis-dev libxcb1-dev libxcb-shm0-dev \
                                             libxcb-xfixes0-dev pkg-config texinfo zlib1g-dev gettext tcl libssl-dev cmake mercurial unzip git \
                                             libdrm-dev valgrind libpciaccess-dev libxslt1-dev geoip-bin libgeoip-dev zlib1g-dev libpcre3 libpcre3-dev \
