@@ -9,9 +9,11 @@ ENV TZ=Australia/Sydney
 RUN apt-get update && apt-get install -y tzdata
 
 RUN set -x \
-    && DEBIAN_FRONTEND=noninteractive apt-get -y install wget curl autoconf automake build-essential libass-dev libfreetype6-dev \
-      libsdl1.2-dev libtheora-dev libtool libva-dev libvdpau-dev libvorbis-dev libxcb1-dev libxcb-shm0-dev \
-      libxcb-xfixes0-dev pkg-config texinfo zlib1g-dev gettext tcl libssl-dev libx264-dev cmake mercurial unzip \
+    && DEBIAN_FRONTEND=noninteractive apt-get --fix-missing -y install wget curl autoconf automake build-essential libass-dev libfreetype6-dev \
+                                            libsdl1.2-dev libtheora-dev libtool libva-dev libvdpau-dev libvorbis-dev libxcb1-dev libxcb-shm0-dev \
+                                            libxcb-xfixes0-dev pkg-config texinfo zlib1g-dev gettext tcl libssl-dev cmake mercurial unzip git \
+                                            libdrm-dev valgrind libpciaccess-dev libxslt1-dev geoip-bin libgeoip-dev zlib1g-dev libpcre3 libpcre3-dev \
+                                            libbz2-dev ca-certificates libssl-dev nasm strace vim \
     && mkdir ~/kjsl \
     && apt-get -y install yasm \
     && cd ~/kjsl \
@@ -57,7 +59,7 @@ RUN set -x \
 
 RUN set -x \
     && cd ~/kjsl \
-    && wget https://github.com/kevleyski/intel-vaapi-driver intel-vaapi-driver \
+    && git clone https://github.com/kevleyski/intel-vaapi-driver intel-vaapi-driver \
     && cd intel-vaapi-driver \
     && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./autogen.sh \
     && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure --prefix="$HOME/kjsl" \
@@ -67,7 +69,7 @@ RUN set -x \
 
 RUN set -x \
     && cd ~/kjsl \
-    && wget https://github.com/kevleyski/libva-utils libva-utils \
+    && git clone https://github.com/kevleyski/libva-utils libva-utils \
     && cd libva-utils \
     && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./autogen.sh \
     && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure --prefix="$HOME/kjsl" \
@@ -80,8 +82,7 @@ RUN set -x \
     && cd ~/kjsl \
     && git clone https://github.com/kevleyski/srt srt \
     && cd srt \
-    && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure --prefix="$HOME/kjsl" --ena
-    e-static --disable-shared \
+    && PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/kjsl/lib/pkgconfig" ./configure --prefix="$HOME/kjsl" --enable-static --disable-shared \
     && PATH="$HOME/bin:$PATH" make -j$(cat /proc/cpuinfo | grep processor | wc -l) \
     && make install \
     && make clean
