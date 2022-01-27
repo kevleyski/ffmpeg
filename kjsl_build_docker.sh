@@ -41,6 +41,6 @@ run_docker_container () {
   docker exec -i -t "$RUN_STATE" /bin/bash
 }
 
-#whack_docker_image
+whack_docker_image
 create_docker_image
 run_docker_container
