@@ -207,8 +207,9 @@ static int config_input(AVFilterLink *inlink)
     s->comb = comb_c;
     s->var  = var_c;
 
-    if (ARCH_X86)
-        ff_pullup_init_x86(s);
+#if ARCH_X86
+    ff_pullup_init_x86(s);
+#endif
     return 0;
 }
 
@@ -669,7 +670,8 @@ static int filter_frame(AVFilterLink *inlink, AVFrame *in)
                   (const uint8_t**)in->data, in->linesize,
                   inlink->format, inlink->w, inlink->h);
 
-    p = in->interlaced_frame ? !in->top_field_first : 0;
+    p = (in->flags & AV_FRAME_FLAG_INTERLACED) ?
+        !(in->flags & AV_FRAME_FLAG_TOP_FIELD_FIRST) : 0;
     pullup_submit_field(s, b, p  );
     pullup_submit_field(s, b, p^1);
 

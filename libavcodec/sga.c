@@ -22,7 +22,8 @@
 #include "avcodec.h"
 #include "get_bits.h"
 #include "bytestream.h"
-#include "internal.h"
+#include "codec_internal.h"
+#include "decode.h"
 
 #define PALDATA_FOLLOWS_TILEDATA 4
 #define HAVE_COMPRESSED_TILEMAP 32
@@ -305,12 +306,11 @@ static int decode_tiledata(AVCodecContext *avctx)
     return 0;
 }
 
-static int sga_decode_frame(AVCodecContext *avctx, void *data,
+static int sga_decode_frame(AVCodecContext *avctx, AVFrame *frame,
                             int *got_frame, AVPacket *avpkt)
 {
     SGAVideoContext *s = avctx->priv_data;
     GetByteContext *gb = &s->gb;
-    AVFrame *frame = data;
     int ret, type;
 
     if (avpkt->size <= 14)
@@ -497,9 +497,13 @@ static int sga_decode_frame(AVCodecContext *avctx, void *data,
     }
 
     memcpy(frame->data[1], s->pal, AVPALETTE_SIZE);
+#if FF_API_PALETTE_HAS_CHANGED
+FF_DISABLE_DEPRECATION_WARNINGS
     frame->palette_has_changed = 1;
+FF_ENABLE_DEPRECATION_WARNINGS
+#endif
     frame->pict_type = AV_PICTURE_TYPE_I;
-    frame->key_frame = 1;
+    frame->flags |= AV_FRAME_FLAG_KEY;
 
     *got_frame = 1;
 
@@ -519,15 +523,14 @@ static av_cold int sga_decode_end(AVCodecContext *avctx)
     return 0;
 }
 
-const AVCodec ff_sga_decoder = {
-    .name           = "sga",
-    .long_name      = NULL_IF_CONFIG_SMALL("Digital Pictures SGA Video"),
-    .type           = AVMEDIA_TYPE_VIDEO,
-    .id             = AV_CODEC_ID_SGA_VIDEO,
+const FFCodec ff_sga_decoder = {
+    .p.name         = "sga",
+    CODEC_LONG_NAME("Digital Pictures SGA Video"),
+    .p.type         = AVMEDIA_TYPE_VIDEO,
+    .p.id           = AV_CODEC_ID_SGA_VIDEO,
     .priv_data_size = sizeof(SGAVideoContext),
     .init           = sga_decode_init,
-    .decode         = sga_decode_frame,
+    FF_CODEC_DECODE_CB(sga_decode_frame),
     .close          = sga_decode_end,
-    .capabilities   = AV_CODEC_CAP_DR1,
-    .caps_internal  = FF_CODEC_CAP_INIT_THREADSAFE,
+    .p.capabilities = AV_CODEC_CAP_DR1,
 };

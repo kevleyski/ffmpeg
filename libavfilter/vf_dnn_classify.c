@@ -21,14 +21,10 @@
  * implementing an classification filter using deep learning networks.
  */
 
-#include "libavformat/avio.h"
+#include "libavutil/file_open.h"
 #include "libavutil/opt.h"
-#include "libavutil/pixdesc.h"
-#include "libavutil/avassert.h"
-#include "libavutil/imgutils.h"
 #include "filters.h"
 #include "dnn_filter_common.h"
-#include "formats.h"
 #include "internal.h"
 #include "libavutil/time.h"
 #include "libavutil/avstring.h"
@@ -48,9 +44,9 @@ typedef struct DnnClassifyContext {
 #define OFFSET2(x) offsetof(DnnClassifyContext, x)
 #define FLAGS AV_OPT_FLAG_FILTERING_PARAM | AV_OPT_FLAG_VIDEO_PARAM
 static const AVOption dnn_classify_options[] = {
-    { "dnn_backend", "DNN backend",                OFFSET(backend_type),     AV_OPT_TYPE_INT,       { .i64 = 2 },    INT_MIN, INT_MAX, FLAGS, "backend" },
+    { "dnn_backend", "DNN backend",                OFFSET(backend_type),     AV_OPT_TYPE_INT,       { .i64 = DNN_OV },    INT_MIN, INT_MAX, FLAGS, "backend" },
 #if (CONFIG_LIBOPENVINO == 1)
-    { "openvino",    "openvino backend flag",      0,                        AV_OPT_TYPE_CONST,     { .i64 = 2 },    0, 0, FLAGS, "backend" },
+    { "openvino",    "openvino backend flag",      0,                        AV_OPT_TYPE_CONST,     { .i64 = DNN_OV },    0, 0, FLAGS, "backend" },
 #endif
     DNN_COMMON_OPTIONS
     { "confidence",  "threshold of confidence",    OFFSET2(confidence),      AV_OPT_TYPE_FLOAT,     { .dbl = 0.5 },  0, 1, FLAGS},
@@ -131,7 +127,7 @@ static int read_classify_label_file(AVFilterContext *context)
     FILE *file;
     DnnClassifyContext *ctx = context->priv;
 
-    file = av_fopen_utf8(ctx->labels_filename, "r");
+    file = avpriv_fopen_utf8(ctx->labels_filename, "r");
     if (!file){
         av_log(context, AV_LOG_ERROR, "failed to open file %s\n", ctx->labels_filename);
         return AVERROR(EINVAL);
@@ -213,7 +209,7 @@ static int dnn_classify_flush_frame(AVFilterLink *outlink, int64_t pts, int64_t 
     DNNAsyncStatusType async_state;
 
     ret = ff_dnn_flush(&ctx->dnnctx);
-    if (ret != DNN_SUCCESS) {
+    if (ret != 0) {
         return -1;
     }
 
@@ -253,7 +249,7 @@ static int dnn_classify_activate(AVFilterContext *filter_ctx)
         if (ret < 0)
             return ret;
         if (ret > 0) {
-            if (ff_dnn_execute_model_classification(&ctx->dnnctx, in, NULL, ctx->target) != DNN_SUCCESS) {
+            if (ff_dnn_execute_model_classification(&ctx->dnnctx, in, NULL, ctx->target) != 0) {
                 return AVERROR(EIO);
             }
         }

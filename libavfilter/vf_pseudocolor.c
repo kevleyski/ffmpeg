@@ -67,6 +67,9 @@ enum Curves {
     TURBO,
     CIVIDIS,
     SOLAR,
+    SPECTRAL,
+    COOL,
+    HEAT,
     NB_CURVES,
 };
 
@@ -85,6 +88,9 @@ enum Presets {
     PRESET_NOMINAL,
     PRESET_PREFERRED,
     PRESET_TOTAL,
+    PRESET_SPECTRAL,
+    PRESET_COOL,
+    PRESET_HEAT,
     NB_PRESETS,
 };
 
@@ -94,6 +100,7 @@ typedef struct Curve {
     double coef[3][8];
     double offset[3];
     curve_fun fun[3];
+    int yuv;
 } Curve;
 
 typedef struct Fill {
@@ -135,6 +142,26 @@ static double solarfun(double x)
     return 0.5 * sin(x) + 0.5;
 }
 
+static double coolfunu(double x)
+{
+    return 0.25 * sin(2.0 * x * M_PI - M_PI) + 0.5;
+}
+
+static double coolfunv(double x)
+{
+    return 0.25 * sin(2.0 * x * M_PI) + 0.5;
+}
+
+static double heatfunu(double x)
+{
+    return 0.25 * cos(2.0 * x * M_PI + M_PI) + 0.75;
+}
+
+static double heatfunv(double x)
+{
+    return 0.25 * sin(2.0 * x * M_PI) + 0.5;
+}
+
 static const Curve curves[] =
 {
     [MAGMA] = {{
@@ -174,6 +201,27 @@ static const Curve curves[] =
     },
     .offset = { 0., -9., 9. },
     .fun = { solarfun, solarfun, solarfun }, },
+    [SPECTRAL] = {{
+        { -1.6820e-15,   1.4982e-12,  -5.0442e-10,   8.0490e-08,  -6.1903e-06,   1.5821e-04, 6.4359e-03,   6.2887e-01 },
+        {  1.2526e-15,  -1.2203e-12,   4.7013e-10,  -8.9360e-08,   8.3839e-06,  -3.6642e-04, 1.4784e-02,  -9.8075e-03 },
+        {  1.4755e-15,  -1.6765e-12,   7.3188e-10,  -1.5522e-07,   1.6406e-05,  -7.7883e-04, 1.4502e-02,   2.1597e-01 },
+    }, .fun = { limit, limit, limit }, },
+    [COOL] = {{
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+    },
+    .offset = { 0., 0., 0 },
+    .yuv = 1,
+    .fun = { coolfunu, limit, coolfunv }, },
+    [HEAT] = {{
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+    },
+    .offset = { 0., 0., 0 },
+    .yuv = 1,
+    .fun = { heatfunu, limit, heatfunv }, },
 };
 
 static const Preset presets[] =
@@ -191,7 +239,10 @@ static const Preset presets[] =
     [PRESET_RANGE2]  = { 5, spec2_range, NULL,             spec2_fills },
     [PRESET_SHADOWS] = { 2, shadows_range, NULL,           shadows_fills },
     [PRESET_HIGHLIGHTS] = { 3, highlights_range, NULL,     highlights_fills },
-    [PRESET_SOLAR] = { 1, &full_range, &curves[SOLAR], NULL },
+    [PRESET_SOLAR]   = { 1, &full_range, &curves[SOLAR],   NULL },
+    [PRESET_SPECTRAL]= { 1, &full_range, &curves[SPECTRAL],NULL },
+    [PRESET_COOL]    = { 1, &full_range, &curves[COOL],    NULL },
+    [PRESET_HEAT]= { 1, &full_range, &curves[HEAT],NULL },
 };
 
 typedef struct PseudoColorContext {
@@ -246,6 +297,9 @@ static const AVOption pseudocolor_options[] = {
     { "nominal",    NULL,                  0,                        AV_OPT_TYPE_CONST,  {.i64=PRESET_NOMINAL}, .flags=FLAGS, "preset" },
     { "preferred",  NULL,                  0,                        AV_OPT_TYPE_CONST,  {.i64=PRESET_PREFERRED},.flags=FLAGS,"preset" },
     { "total",      NULL,                  0,                        AV_OPT_TYPE_CONST,  {.i64=PRESET_TOTAL},   .flags=FLAGS, "preset" },
+    { "spectral",   NULL,                  0,                        AV_OPT_TYPE_CONST,  {.i64=PRESET_SPECTRAL},.flags = FLAGS, "preset" },
+    { "cool",       NULL,                  0,                        AV_OPT_TYPE_CONST,  {.i64=PRESET_COOL},    .flags = FLAGS, "preset" },
+    { "heat",       NULL,                  0,                        AV_OPT_TYPE_CONST,  {.i64=PRESET_HEAT},    .flags = FLAGS, "preset" },
     { "opacity", "set pseudocolor opacity",OFFSET(opacity),          AV_OPT_TYPE_FLOAT,  {.dbl=1}, 0, 1, .flags = FLAGS },
     { NULL }
 };
@@ -562,6 +616,19 @@ static void pseudocolor_filter_16_11d(int max, int width, int height,
 ((0.50000*224.0/255.0) * r1 - (0.45415*224.0/255.0) * g1 - \
    (0.04585*224.0/255.0) * b1 + max * 0.5)
 
+#define Wr 0.2126
+#define Wb 0.0722
+#define Wg (1 - Wr - Wb)
+#define Umax 0.436
+#define Vmax 0.615
+
+#define YUV_BT709_TO_R(y, u, v, max) \
+    ((y + v * (1 - Wr) / Vmax) * max)
+#define YUV_BT709_TO_G(y, u, v, max) \
+    ((y - (u * Wb * (1 - Wb) / (Umax * Wg)) - (v * Wr * (1 - Wr) / (Vmax * Wg))) * max)
+#define YUV_BT709_TO_B(y, u, v, max) \
+    ((y + u * (1 - Wb) / Umax) * max)
+
 static double poly_eval(const double *const poly, double x, curve_fun fun)
 {
     double res = 0.;
@@ -687,11 +754,17 @@ static int config_input(AVFilterLink *inlink)
                     const double lf = i / (double)s->max * 256.;
                     double r, g, b;
 
-                    g = poly_eval(curve.coef[1], lf + curve.offset[1], curve.fun[1]) * s->max;
-                    b = poly_eval(curve.coef[2], lf + curve.offset[2], curve.fun[2]) * s->max;
-                    r = poly_eval(curve.coef[0], lf + curve.offset[0], curve.fun[0]) * s->max;
+                    g = poly_eval(curve.coef[1], lf + curve.offset[1], curve.fun[1]);
+                    b = poly_eval(curve.coef[2], lf + curve.offset[2], curve.fun[2]);
+                    r = poly_eval(curve.coef[0], lf + curve.offset[0], curve.fun[0]);
 
-                    if (!rgb) {
+                    if (!curve.yuv || !rgb) {
+                        g *= s->max;
+                        b *= s->max;
+                        r *= s->max;
+                    }
+
+                    if (!rgb && !curve.yuv) {
                         double y = RGB_TO_Y_BT709(r, g, b);
                         double u = RGB_TO_U_BT709(r, g, b, s->max);
                         double v = RGB_TO_V_BT709(r, g, b, s->max);
@@ -699,6 +772,14 @@ static int config_input(AVFilterLink *inlink)
                         r = v;
                         g = y;
                         b = u;
+                    } else if (rgb && curve.yuv) {
+                        double y = g;
+                        double u = b - 0.5;
+                        double v = r - 0.5;
+
+                        r = av_clipd(YUV_BT709_TO_R(y, u, v, s->max), 0, s->max);
+                        g = av_clipd(YUV_BT709_TO_G(y, u, v, s->max), 0, s->max);
+                        b = av_clipd(YUV_BT709_TO_B(y, u, v, s->max), 0, s->max);
                     }
 
                     s->lut[0][i] = g;

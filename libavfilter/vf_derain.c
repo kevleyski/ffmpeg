@@ -43,8 +43,7 @@ static const AVOption derain_options[] = {
     { "filter_type", "filter type(derain/dehaze)",  OFFSET(filter_type),    AV_OPT_TYPE_INT,    { .i64 = 0 },    0, 1, FLAGS, "type" },
     { "derain",      "derain filter flag",          0,                      AV_OPT_TYPE_CONST,  { .i64 = 0 },    0, 0, FLAGS, "type" },
     { "dehaze",      "dehaze filter flag",          0,                      AV_OPT_TYPE_CONST,  { .i64 = 1 },    0, 0, FLAGS, "type" },
-    { "dnn_backend", "DNN backend",                 OFFSET(dnnctx.backend_type),   AV_OPT_TYPE_INT,    { .i64 = 0 },    0, 1, FLAGS, "backend" },
-    { "native",      "native backend flag",         0,                      AV_OPT_TYPE_CONST,  { .i64 = 0 },    0, 0, FLAGS, "backend" },
+    { "dnn_backend", "DNN backend",                 OFFSET(dnnctx.backend_type),   AV_OPT_TYPE_INT,    { .i64 = 1 },    0, 1, FLAGS, "backend" },
 #if (CONFIG_LIBTENSORFLOW == 1)
     { "tensorflow",  "tensorflow backend flag",     0,                      AV_OPT_TYPE_CONST,  { .i64 = 1 },    0, 0, FLAGS, "backend" },
 #endif
@@ -62,7 +61,7 @@ static int filter_frame(AVFilterLink *inlink, AVFrame *in)
     AVFilterContext *ctx  = inlink->dst;
     AVFilterLink *outlink = ctx->outputs[0];
     DRContext *dr_context = ctx->priv;
-    DNNReturnType dnn_result;
+    int dnn_result;
     AVFrame *out;
 
     out = ff_get_video_buffer(outlink, outlink->w, outlink->h);
@@ -74,10 +73,10 @@ static int filter_frame(AVFilterLink *inlink, AVFrame *in)
     av_frame_copy_props(out, in);
 
     dnn_result = ff_dnn_execute_model(&dr_context->dnnctx, in, out);
-    if (dnn_result != DNN_SUCCESS){
+    if (dnn_result != 0){
         av_log(ctx, AV_LOG_ERROR, "failed to execute model\n");
         av_frame_free(&in);
-        return AVERROR(EIO);
+        return dnn_result;
     }
     do {
         async_state = ff_dnn_get_result(&dr_context->dnnctx, &in, &out);
