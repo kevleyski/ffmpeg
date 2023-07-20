@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ffplay" type="CLionExternalRunConfiguration" factoryName="Application" PROGRAM_PARAMS="$PROJECT_DIR$/../streama/media/baseline_720_avc.ts" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ffmpeg" TARGET_NAME="FFplay" CONFIG_NAME="FFplay" RUN_PATH="$PROJECT_DIR$/ffplay_g">
+  <configuration default="false" name="ffplay" type="CLionExternalRunConfiguration" factoryName="Application" PROGRAM_PARAMS="$USER_HOME$/vids/reckless_in_pyrmont.mp4" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ffmpeg" TARGET_NAME="FFplay" CONFIG_NAME="FFplay" RUN_PATH="$PROJECT_DIR$/ffplay_g">
     <method v="2">
       <option name="CLION.EXTERNAL.BUILD" enabled="true" />
     </method>

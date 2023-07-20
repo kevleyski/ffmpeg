@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ffmpeg (srt)" type="CLionExternalRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-y -force_dts_monotonicity 1 -dts_monotonicity_threshold 10000 -protocol_whitelist 'https,tls,http,file,tcp' -nostdin -f concat -safe 0 -i all_video.ts -t 60 -vcodec libx264 -movflags faststart adease_norigin_scrubs_s2e8_video_clip.ts" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$PROJECT_DIR$/../norigin" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ffmpeg" TARGET_NAME="FFmpeg" CONFIG_NAME="FFmpeg" RUN_PATH="$PROJECT_DIR$/ffmpeg_g">
+    <method v="2">
+      <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+    </method>
+  </configuration>
+</component>

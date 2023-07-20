@@ -611,6 +611,7 @@ const AVFilter *av_filter_iterate(void **opaque)
     uintptr_t i = (uintptr_t)*opaque;
     const AVFilter *f = filter_list[i];
 
+
     if (f)
         *opaque = (void*)(i + 1);
 
