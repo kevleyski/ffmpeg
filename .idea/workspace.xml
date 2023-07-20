@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="BranchesTreeState">
     <expand>
       <path>
@@ -24,26 +27,31 @@
     </expand>
     <select />
   </component>
-  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
-    <generated>
-      <config projectName="ffmpeg" targetName="ffmpeg" />
-    </generated>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
+  <component name="CMakeReloadState">
+    <option name="reloaded" value="true" />
+  </component>
+  <component name="CMakeRunConfigurationManager">
+    <generated />
   </component>
   <component name="CMakeSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" ENABLED="true" />
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
     </configurations>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="45ec317e-9f74-4354-bd97-bc2630dc4cad" name="Default Changelist" comment="KJSL: FFmpeg debug">
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/all.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/ffprobe_srt.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/kjsl_build_osx_dev_sh.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations/kjsl_build_osx_noav1_sh.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/GitLink.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/aom-master/CODE_OF_CONDUCT.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/ffmpeg.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kjsl_build_osx_noav1.sh" beforeDir="false" afterPath="$PROJECT_DIR$/kjsl_build_osx_noav1.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kjsl_build_linux.sh.orig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/kjsl_build_osx.sh" beforeDir="false" afterPath="$PROJECT_DIR$/kjsl_build_osx.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kjsl_build_osx_dev.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/kjsl_build_osx_noav1.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/kjsl_build_osx_options.sh" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,6 +72,9 @@
   <component name="MacroExpansionManager">
     <option name="directoryName" value="csoBwusy" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectId" id="1ckM1TQC4dHKogzrWb7wA4Tgvut" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -72,42 +83,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
-    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="cf.first.check.clang-format" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.detected.package.tslint" value="true" />
-    <property name="node.js.path.for.package.eslint" value="project" />
-    <property name="node.js.path.for.package.tslint" value="project" />
-    <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
-    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="fileTemplates" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="BashSupport Pro.kjsl_build_osx_noav1.sh">
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="BashSupport Pro.kjsl_build_osx.sh">
     <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="kjsl_build_osx.sh" type="BashProRunConfiguration" temporary="true">
+      <option name="scriptPath" value="$PROJECT_DIR$/kjsl_build_osx.sh" />
+      <RunnerSettings bashdbVersion="Automatic" bashPathMapper="Automatic" RunnerId="pro.bashsupport.shDebugRunner" />
+      <method v="2" />
     </configuration>
     <configuration name="Makefile" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
       <makefile filename="$PROJECT_DIR$/Makefile" target="" workingDirectory="" arguments="">
@@ -130,20 +135,20 @@
     <list>
       <item itemvalue="BashSupport Pro.kjsl_build_osx_dev.sh" />
       <item itemvalue="BashSupport Pro.kjsl_build_osx_noav1.sh" />
-      <item itemvalue="CMake Application.ffmpeg" />
+      <item itemvalue="BashSupport Pro.kjsl_build_osx.sh" />
       <item itemvalue="Custom Build Application.ffplay" />
       <item itemvalue="Custom Build Application.ffprobe srt" />
       <item itemvalue="Custom Build Application.ffmpeg (hls discos)" />
-      <item itemvalue="Makefile.ffprobe" />
-      <item itemvalue="Makefile.Makefile" />
-      <item itemvalue="Makefile.all" />
-      <item itemvalue="Makefile.build" />
-      <item itemvalue="Makefile.alltools" />
+      <item itemvalue="Makefile Target.Makefile" />
+      <item itemvalue="Makefile Target.all" />
+      <item itemvalue="Makefile Target.ffprobe" />
+      <item itemvalue="Makefile Target.alltools" />
+      <item itemvalue="Makefile Target.build" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Makefile.alltools" />
-        <item itemvalue="Makefile.build" />
+        <item itemvalue="BashSupport Pro.kjsl_build_osx.sh" />
+        <item itemvalue="BashSupport Pro.kjsl_build_osx.sh" />
       </list>
     </recent_temporary>
   </component>
@@ -175,6 +180,8 @@
       <workItem from="1604369282873" duration="2021000" />
       <workItem from="1613779368944" duration="3862000" />
       <workItem from="1613783884742" duration="1029000" />
+      <workItem from="1689822236016" duration="289000" />
+      <workItem from="1689822647887" duration="1416000" />
     </task>
     <task id="LOCAL-00001" summary="[KJSL] HLS discos issue&#10;Adding force_dts_monotonicity from&#10;https://ffmpeg.org/pipermail/ffmpeg-devel/2018-March/226706.html&#10;http://ffmpeg.org/pipermail/ffmpeg-devel/attachments/20180316/739542e4/attachment.obj">
       <created>1567811310694</created>
@@ -232,7 +239,6 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
