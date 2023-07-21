@@ -3,7 +3,7 @@
 # KJSL: script to build FFmpeg debug on MacOS
 
 if [ ! -d /usr/local/Cellar/theora ]; then
-  brew install automake fdk-aac git lame libass libtool libvorbis libvpx opus sdl shtool texi2html theora wget x264 x265 xvid nasm yasm openssl rtmpdump
+  brew install automake fdk-aac git lame libass libtool libvorbis libvpx opus sdl shtool texi2html theora wget x264 x265 xvid nasm yasm openssl rtmpdump freetype graphite2 harfbuzz fontconfig fribidi
 fi
 
 # build FFmpeg (with AV1, srt, tesseract and)
