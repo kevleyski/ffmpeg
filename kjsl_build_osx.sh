@@ -8,7 +8,12 @@ fi
 
 # build FFmpeg (with AV1, srt, tesseract and)
 ./configure  --prefix=/usr/local --enable-gpl --enable-nonfree \
---enable-libfdk-aac --enable-libfreetype \
+--enable-libfdk-aac \
+--enable-libfreetype \
+--enable-libfontconfig \
+--enable-libfreetype \
+--enable-libfribidi \
+--enable-libharfbuzz \
 --enable-libopus --enable-libtheora --enable-libvorbis \
 --enable-libopenjpeg --enable-avfilter \
 --enable-libvpx --enable-libx264 --enable-libx265 --enable-libxvid --enable-ffplay \
