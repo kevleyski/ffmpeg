@@ -15,7 +15,8 @@ fi
 --enable-libtesseract \
 --enable-libsrt \
 --enable-librtmp \
---enable-libflite
+--enable-libflite \
+--disable-stripping
 
 make -j$(($(nproc)+1))
 sudo make install
