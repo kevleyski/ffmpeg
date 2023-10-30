@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ffplay (flite)" type="CLionExternalRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-f lavfi -i &quot;flite=textfile=kevs.txt:voice=${v}&quot;" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="ffmpeg" TARGET_NAME="FFplay" CONFIG_NAME="FFplay" RUN_PATH="$PROJECT_DIR$/ffplay_g">
-    <method v="2">
-      <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-    </method>
-  </configuration>
-</component>

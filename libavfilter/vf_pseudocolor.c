@@ -25,7 +25,6 @@
 #include "libavutil/opt.h"
 #include "libavutil/pixdesc.h"
 #include "avfilter.h"
-#include "formats.h"
 #include "internal.h"
 #include "video.h"
 
@@ -70,6 +69,10 @@ enum Curves {
     SPECTRAL,
     COOL,
     HEAT,
+    FIERY,
+    BLUES,
+    GREEN,
+    HELIX,
     NB_CURVES,
 };
 
@@ -91,6 +94,10 @@ enum Presets {
     PRESET_SPECTRAL,
     PRESET_COOL,
     PRESET_HEAT,
+    PRESET_FIERY,
+    PRESET_BLUES,
+    PRESET_GREEN,
+    PRESET_HELIX,
     NB_PRESETS,
 };
 
@@ -162,6 +169,26 @@ static double heatfunv(double x)
     return 0.25 * sin(2.0 * x * M_PI) + 0.5;
 }
 
+static double fieryfunu(double x)
+{
+    return 0.75 - 0.25 * cos(2.0 * x * M_PI);
+}
+
+static double fieryfunv(double x)
+{
+    return 0.25 + 0.25 * cos(2.0 * x * M_PI);
+}
+
+static double helixfunu(double x)
+{
+    return 0.5 + 0.15 * sin(5.0 * x * M_PI + M_PI);
+}
+
+static double helixfunv(double x)
+{
+    return 0.5 + 0.15 * cos(6.0 * x * M_PI + M_PI_2);
+}
+
 static const Curve curves[] =
 {
     [MAGMA] = {{
@@ -222,6 +249,38 @@ static const Curve curves[] =
     .offset = { 0., 0., 0 },
     .yuv = 1,
     .fun = { heatfunu, limit, heatfunv }, },
+    [FIERY] = {{
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+    },
+    .offset = { 0., 0., 0 },
+    .yuv = 1,
+    .fun = { fieryfunu, limit, fieryfunv }, },
+    [BLUES] = {{
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+    },
+    .offset = { 0., 0., 0 },
+    .yuv = 1,
+    .fun = { fieryfunv, limit, fieryfunu }, },
+    [GREEN] = {{
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+    },
+    .offset = { 0., 0., 0 },
+    .yuv = 1,
+    .fun = { fieryfunv, limit, fieryfunv }, },
+    [HELIX] = {{
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+        { 0, 0, 0, 0, 0, 0, 1./256, 0 },
+    },
+    .offset = { 0., 0., 0 },
+    .yuv = 1,
+    .fun = { helixfunu, limit, helixfunv }, },
 };
 
 static const Preset presets[] =
@@ -242,7 +301,11 @@ static const Preset presets[] =
     [PRESET_SOLAR]   = { 1, &full_range, &curves[SOLAR],   NULL },
     [PRESET_SPECTRAL]= { 1, &full_range, &curves[SPECTRAL],NULL },
     [PRESET_COOL]    = { 1, &full_range, &curves[COOL],    NULL },
-    [PRESET_HEAT]= { 1, &full_range, &curves[HEAT],NULL },
+    [PRESET_HEAT]    = { 1, &full_range, &curves[HEAT],    NULL },
+    [PRESET_FIERY]   = { 1, &full_range, &curves[FIERY],   NULL },
+    [PRESET_BLUES]   = { 1, &full_range, &curves[BLUES],   NULL },
+    [PRESET_GREEN]   = { 1, &full_range, &curves[GREEN],   NULL },
+    [PRESET_HELIX]   = { 1, &full_range, &curves[HELIX],   NULL },
 };
 
 typedef struct PseudoColorContext {
@@ -300,6 +363,10 @@ static const AVOption pseudocolor_options[] = {
     { "spectral",   NULL,                  0,                        AV_OPT_TYPE_CONST,  {.i64=PRESET_SPECTRAL},.flags = FLAGS, "preset" },
     { "cool",       NULL,                  0,                        AV_OPT_TYPE_CONST,  {.i64=PRESET_COOL},    .flags = FLAGS, "preset" },
     { "heat",       NULL,                  0,                        AV_OPT_TYPE_CONST,  {.i64=PRESET_HEAT},    .flags = FLAGS, "preset" },
+    { "fiery",      NULL,                  0,                        AV_OPT_TYPE_CONST,  {.i64=PRESET_FIERY},   .flags = FLAGS, "preset" },
+    { "blues",      NULL,                  0,                        AV_OPT_TYPE_CONST,  {.i64=PRESET_BLUES},   .flags = FLAGS, "preset" },
+    { "green",      NULL,                  0,                        AV_OPT_TYPE_CONST,  {.i64=PRESET_GREEN},   .flags = FLAGS, "preset" },
+    { "helix",      NULL,                  0,                        AV_OPT_TYPE_CONST,  {.i64=PRESET_HELIX},   .flags = FLAGS, "preset" },
     { "opacity", "set pseudocolor opacity",OFFSET(opacity),          AV_OPT_TYPE_FLOAT,  {.dbl=1}, 0, 1, .flags = FLAGS },
     { NULL }
 };
@@ -317,8 +384,8 @@ static const enum AVPixelFormat pix_fmts[] = {
     AV_PIX_FMT_YUV422P10, AV_PIX_FMT_YUVA422P10,
     AV_PIX_FMT_YUV444P10, AV_PIX_FMT_YUVA444P10,
     AV_PIX_FMT_YUV420P12,
-    AV_PIX_FMT_YUV422P12,
-    AV_PIX_FMT_YUV444P12,
+    AV_PIX_FMT_YUV422P12, AV_PIX_FMT_YUVA422P12,
+    AV_PIX_FMT_YUV444P12, AV_PIX_FMT_YUVA444P12,
     AV_PIX_FMT_YUV420P14,
     AV_PIX_FMT_YUV422P14,
     AV_PIX_FMT_YUV444P14,
@@ -328,7 +395,7 @@ static const enum AVPixelFormat pix_fmts[] = {
     AV_PIX_FMT_GBRP9,
     AV_PIX_FMT_GBRP10, AV_PIX_FMT_GBRAP10,
     AV_PIX_FMT_GBRP12, AV_PIX_FMT_GBRAP12,
-    AV_PIX_FMT_GBRP14,
+    AV_PIX_FMT_GBRP14, AV_PIX_FMT_GBRAP14,
     AV_PIX_FMT_GBRP16, AV_PIX_FMT_GBRAP16,
     AV_PIX_FMT_NONE
 };
@@ -834,6 +901,7 @@ static int config_input(AVFilterLink *inlink)
     case AV_PIX_FMT_YUV444P10:
     case AV_PIX_FMT_YUVA444P10:
     case AV_PIX_FMT_YUV444P12:
+    case AV_PIX_FMT_YUVA444P12:
     case AV_PIX_FMT_YUV444P14:
     case AV_PIX_FMT_YUV444P16:
     case AV_PIX_FMT_YUVA444P16:
@@ -844,6 +912,7 @@ static int config_input(AVFilterLink *inlink)
     case AV_PIX_FMT_GBRP16:
     case AV_PIX_FMT_GBRAP10:
     case AV_PIX_FMT_GBRAP12:
+    case AV_PIX_FMT_GBRAP14:
     case AV_PIX_FMT_GBRAP16:
     case AV_PIX_FMT_GRAY9:
     case AV_PIX_FMT_GRAY10:
@@ -857,6 +926,7 @@ static int config_input(AVFilterLink *inlink)
     case AV_PIX_FMT_YUV422P10:
     case AV_PIX_FMT_YUVA422P10:
     case AV_PIX_FMT_YUV422P12:
+    case AV_PIX_FMT_YUVA422P12:
     case AV_PIX_FMT_YUV422P14:
     case AV_PIX_FMT_YUV422P16:
     case AV_PIX_FMT_YUVA422P16:
@@ -972,13 +1042,6 @@ static const AVFilterPad inputs[] = {
     },
 };
 
-static const AVFilterPad outputs[] = {
-    {
-        .name = "default",
-        .type = AVMEDIA_TYPE_VIDEO,
-    },
-};
-
 static av_cold void uninit(AVFilterContext *ctx)
 {
     PseudoColorContext *s = ctx->priv;
@@ -999,7 +1062,7 @@ const AVFilter ff_vf_pseudocolor = {
     .priv_class    = &pseudocolor_class,
     .uninit        = uninit,
     FILTER_INPUTS(inputs),
-    FILTER_OUTPUTS(outputs),
+    FILTER_OUTPUTS(ff_video_default_filterpad),
     FILTER_PIXFMTS_ARRAY(pix_fmts),
     .flags         = AVFILTER_FLAG_SUPPORT_TIMELINE_GENERIC | AVFILTER_FLAG_SLICE_THREADS,
     .process_command = process_command,
