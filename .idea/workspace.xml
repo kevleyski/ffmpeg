@@ -43,8 +43,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="45ec317e-9f74-4354-bd97-bc2630dc4cad" name="Default Changelist" comment="KJSL: FFmpeg debug">
+      <change afterPath="$PROJECT_DIR$/count.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/foo.mp4" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/kevs_flite_example.mp4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/ffplay__flite_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/ffplay__flite_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kjsl_build_osx.sh" beforeDir="false" afterPath="$PROJECT_DIR$/kjsl_build_osx.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,6 +84,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
@@ -99,7 +103,7 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunManager" selected="Custom Build Application.ffmpeg (rtmp)">
+  <component name="RunManager" selected="Makefile Target.distclean">
     <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -110,14 +114,17 @@
       <RunnerSettings bashdbVersion="Automatic" bashPathMapper="Automatic" RunnerId="pro.bashsupport.shDebugRunner" />
       <method v="2" />
     </configuration>
-    <configuration name="Makefile" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
-      <makefile filename="$PROJECT_DIR$/Makefile" target="" workingDirectory="" arguments="">
-        <envs />
-      </makefile>
+    <configuration name="rtmp_clock_kevs3" type="BashProRunConfiguration" temporary="true">
+      <option name="scriptPath" value="$USER_HOME$/rtmp_clock_kevs3" />
       <method v="2" />
     </configuration>
-    <configuration name="alltools" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
-      <makefile filename="$PROJECT_DIR$/ffbuild/common.mak" target="alltools" workingDirectory="" arguments="">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Makefile" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="" workingDirectory="" arguments="">
         <envs />
       </makefile>
       <method v="2" />
@@ -128,10 +135,28 @@
       </makefile>
       <method v="2" />
     </configuration>
+    <configuration name="distclean" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="distclean" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="kjsl_build_osx.sh" type="ShConfigurationType" temporary="true">
+      <option name="SCRIPT_TEXT" value="" />
+      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/kjsl_build_osx.sh" />
+      <option name="SCRIPT_OPTIONS" value="" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+      <option name="INTERPRETER_PATH" value="/bin/bash" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="EXECUTE_IN_TERMINAL" value="true" />
+      <option name="EXECUTE_SCRIPT_FILE" value="true" />
+      <envs />
+      <method v="2" />
+    </configuration>
     <list>
-      <item itemvalue="BashSupport Pro.kjsl_build_osx_dev.sh" />
-      <item itemvalue="BashSupport Pro.kjsl_build_osx_noav1.sh" />
-      <item itemvalue="BashSupport Pro.kjsl_build_osx.sh" />
       <item itemvalue="Custom Build Application.ffplay" />
       <item itemvalue="Custom Build Application.ffplay (flite)" />
       <item itemvalue="Custom Build Application.ffprobe srt" />
@@ -141,13 +166,15 @@
       <item itemvalue="Makefile Target.Makefile" />
       <item itemvalue="Makefile Target.all" />
       <item itemvalue="Makefile Target.ffprobe" />
-      <item itemvalue="Makefile Target.alltools" />
+      <item itemvalue="Makefile Target.distclean" />
       <item itemvalue="Makefile Target.build" />
+      <item itemvalue="Shell Script.kjsl_build_osx.sh" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="BashSupport Pro.kjsl_build_osx.sh" />
-        <item itemvalue="BashSupport Pro.kjsl_build_osx.sh" />
+        <item itemvalue="Makefile Target.distclean" />
+        <item itemvalue="Makefile Target.build" />
+        <item itemvalue="Shell Script.kjsl_build_osx.sh" />
       </list>
     </recent_temporary>
   </component>
@@ -181,7 +208,10 @@
       <workItem from="1613783884742" duration="1029000" />
       <workItem from="1689822236016" duration="289000" />
       <workItem from="1689822647887" duration="3747000" />
-      <workItem from="1689826417459" duration="11188000" />
+      <workItem from="1689826417459" duration="19430000" />
+      <workItem from="1690243122779" duration="836000" />
+      <workItem from="1698631711786" duration="1220000" />
+      <workItem from="1698638630015" duration="2203000" />
     </task>
     <task id="LOCAL-00001" summary="[KJSL] HLS discos issue&#10;Adding force_dts_monotonicity from&#10;https://ffmpeg.org/pipermail/ffmpeg-devel/2018-March/226706.html&#10;http://ffmpeg.org/pipermail/ffmpeg-devel/attachments/20180316/739542e4/attachment.obj">
       <created>1567811310694</created>
@@ -239,7 +269,14 @@
       <option name="project" value="LOCAL" />
       <updated>1689902309596</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="KJSL: FFmpeg debug">
+      <created>1689902810229</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1689902810229</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TodoView">
