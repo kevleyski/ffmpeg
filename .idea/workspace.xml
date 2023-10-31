@@ -42,7 +42,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45ec317e-9f74-4354-bd97-bc2630dc4cad" name="Default Changelist" comment="KJSL: FFmpeg debug macOS Sonoma fun" />
+    <list default="true" id="45ec317e-9f74-4354-bd97-bc2630dc4cad" name="Default Changelist" comment="KJSL: FFmpeg debug macOS Sonoma fun">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kjsl_build_macos.sh" beforeDir="false" afterPath="$PROJECT_DIR$/kjsl_build_macos.sh" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -115,11 +118,6 @@
     <configuration name="rtmp_clock_kevs3" type="BashProRunConfiguration" temporary="true">
       <option name="scriptPath" value="$USER_HOME$/rtmp_clock_kevs3" />
       <method v="2" />
-    </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
     </configuration>
     <configuration name="Makefile" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
       <makefile filename="$PROJECT_DIR$/Makefile" target="" workingDirectory="" arguments="">
@@ -210,7 +208,8 @@
       <workItem from="1698631711786" duration="1220000" />
       <workItem from="1698638630015" duration="2203000" />
       <workItem from="1698707508741" duration="1935000" />
-      <workItem from="1698723878805" duration="1131000" />
+      <workItem from="1698723878805" duration="1216000" />
+      <workItem from="1698725863140" duration="610000" />
     </task>
     <task id="LOCAL-00001" summary="[KJSL] HLS discos issue&#10;Adding force_dts_monotonicity from&#10;https://ffmpeg.org/pipermail/ffmpeg-devel/2018-March/226706.html&#10;http://ffmpeg.org/pipermail/ffmpeg-devel/attachments/20180316/739542e4/attachment.obj">
       <created>1567811310694</created>
@@ -299,7 +298,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698724918559</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="KJSL: FFmpeg debug macOS Sonoma fun">
+      <option name="closed" value="true" />
+      <created>1698725097642</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1698725097642</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TodoView">
