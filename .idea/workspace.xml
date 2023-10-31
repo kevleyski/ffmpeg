@@ -42,9 +42,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45ec317e-9f74-4354-bd97-bc2630dc4cad" name="Default Changelist" comment="KJSL: FFmpeg debug macOS Sonoma fun">
-      <change beforePath="$PROJECT_DIR$/kjsl_build_macos.sh" beforeDir="false" afterPath="$PROJECT_DIR$/kjsl_build_macos.sh" afterDir="false" />
-    </list>
+    <list default="true" id="45ec317e-9f74-4354-bd97-bc2630dc4cad" name="Default Changelist" comment="KJSL: FFmpeg debug macOS Sonoma fun" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -212,7 +210,7 @@
       <workItem from="1698631711786" duration="1220000" />
       <workItem from="1698638630015" duration="2203000" />
       <workItem from="1698707508741" duration="1935000" />
-      <workItem from="1698723878805" duration="820000" />
+      <workItem from="1698723878805" duration="1131000" />
     </task>
     <task id="LOCAL-00001" summary="[KJSL] HLS discos issue&#10;Adding force_dts_monotonicity from&#10;https://ffmpeg.org/pipermail/ffmpeg-devel/2018-March/226706.html&#10;http://ffmpeg.org/pipermail/ffmpeg-devel/attachments/20180316/739542e4/attachment.obj">
       <created>1567811310694</created>
@@ -293,7 +291,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698723915451</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="KJSL: FFmpeg debug macOS Sonoma fun">
+      <option name="closed" value="true" />
+      <created>1698724918559</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1698724918559</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TodoView">
