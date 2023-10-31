@@ -7,7 +7,7 @@ if [ ! -d /usr/local/Cellar/theora ]; then
 fi
 
 # build FFmpeg (with AV1, srt, tesseract and)
-LDFLAGS="-Wl,-framework,CoreFoundation -Wl,-framework,Security -Wl,-framework,VideoToolbox -Wl,-framework,CoreMedia -Wl,-framework,CoreVideo" LIBFFI_CFLAGS=-I/usr/include/ffi LIBFFI_LIBS=-lffi ./configure  --prefix=/usr/local --enable-gpl --enable-nonfree \
+LDFLAGS="-Wl,-ld_classic,-framework,CoreFoundation -Wl,-framework,Security -Wl,-framework,VideoToolbox -Wl,-framework,CoreMedia -Wl,-framework,CoreVideo" LIBFFI_CFLAGS=-I/usr/include/ffi LIBFFI_LIBS=-lffi ./configure  --prefix=/usr/local --enable-gpl --enable-nonfree \
 --pkgconfigdir=/usr/local/pkg-config \
 --enable-shared \
 --enable-pthreads \
