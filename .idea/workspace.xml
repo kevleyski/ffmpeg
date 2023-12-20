@@ -42,7 +42,56 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="45ec317e-9f74-4354-bd97-bc2630dc4cad" name="Default Changelist" comment="KJSL: FFmpeg debug macOS Sonoma fun" />
+    <list default="true" id="45ec317e-9f74-4354-bd97-bc2630dc4cad" name="Default Changelist" comment="KJSL: FFmpeg debug macOS Sonoma fun">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/aom_config.c.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/aom_config_defaults.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/aom_configure.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/aom_optimization.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/aom_version.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/compiler_flags.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/compiler_tests.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/cpu.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/dist.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/exports.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/exports_sources.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/generate_aom_config_templates.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/generate_exports.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/msvc_runtime.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/arm-ios-common.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/arm64-ios.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/arm64-linux-gcc.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/armv7-ios.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/armv7-linux-gcc.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/armv7s-ios.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/ios-simulator-common.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/mips32-linux-gcc.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/mips64-linux-gcc.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/x86-ios-simulator.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/x86-linux.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/x86-macos.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/x86_64-ios-simulator.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/util.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/Android.mk" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/Makefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/ads2armasm_ms.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/ads2gas.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/ads2gas_apple.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/armlink_adapter.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/configure.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/gen_asm_deps.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/gen_msvs_def.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/gen_msvs_sln.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/gen_msvs_vcxproj.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/ios-Info.plist" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/iosbuild.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/msvs_common.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/rtcd.pl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/thumb.pm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/aom-master/build/make/version.sh" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -207,6 +256,8 @@
       <workItem from="1698707508741" duration="1935000" />
       <workItem from="1698723878805" duration="1216000" />
       <workItem from="1698725863140" duration="1224000" />
+      <workItem from="1698975490563" duration="133000" />
+      <workItem from="1698975685772" duration="19000" />
     </task>
     <task id="LOCAL-00001" summary="[KJSL] HLS discos issue&#10;Adding force_dts_monotonicity from&#10;https://ffmpeg.org/pipermail/ffmpeg-devel/2018-March/226706.html&#10;http://ffmpeg.org/pipermail/ffmpeg-devel/attachments/20180316/739542e4/attachment.obj">
       <created>1567811310694</created>
@@ -311,7 +362,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698728220516</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="KJSL: FFmpeg debug macOS Sonoma fun">
+      <option name="closed" value="true" />
+      <created>1698975614297</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1698975614297</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TodoView">
