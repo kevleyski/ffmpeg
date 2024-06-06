@@ -9,6 +9,7 @@ fi
 # build FFmpeg (with AV1, srt, tesseract and)
 LDFLAGS="-Wl,-ld_classic,-framework,CoreFoundation -Wl,-framework,Security -Wl,-framework,VideoToolbox -Wl,-framework,CoreMedia -Wl,-framework,CoreVideo" LIBFFI_CFLAGS=-I/usr/include/ffi LIBFFI_LIBS=-lffi ./configure  --prefix=/usr/local --enable-gpl --enable-nonfree \
 --pkgconfigdir=/usr/local/lib/pkg-config \
+--enable-postproc \
 --enable-shared \
 --enable-pthreads \
 --enable-version3 \
@@ -19,6 +20,7 @@ LDFLAGS="-Wl,-ld_classic,-framework,CoreFoundation -Wl,-framework,Security -Wl,-
 --enable-libfreetype \
 --enable-libfribidi \
 --enable-libharfbuzz \
+--enable-libsvtav1 \
 --enable-libopus --enable-libtheora --enable-libvorbis \
 --enable-libopenjpeg --enable-avfilter \
 --enable-libvpx --enable-libx264 --enable-libx265 --enable-libxvid --enable-ffplay \
@@ -26,6 +28,7 @@ LDFLAGS="-Wl,-ld_classic,-framework,CoreFoundation -Wl,-framework,Security -Wl,-
 --enable-libsrt \
 --enable-librtmp \
 --enable-libflite \
+--enable-libmp3lame \
 --disable-stripping
 
 make -j$(($(nproc)+1))
