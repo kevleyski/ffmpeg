@@ -22,12 +22,14 @@
  */
 
 #include "libavutil/avstring.h"
+#include "libavutil/mem.h"
 #include "libavutil/opt.h"
 #include "libavutil/pixdesc.h"
 #include "avfilter.h"
 #include "drawutils.h"
 #include "framesync.h"
 #include "internal.h"
+
 typedef struct Sums {
     uint64_t s[2];
 } Sums;

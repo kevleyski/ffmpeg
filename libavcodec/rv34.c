@@ -27,6 +27,7 @@
 #include "libavutil/avassert.h"
 #include "libavutil/imgutils.h"
 #include "libavutil/internal.h"
+#include "libavutil/mem.h"
 #include "libavutil/mem_internal.h"
 #include "libavutil/thread.h"
 
@@ -96,6 +97,8 @@ static av_cold void rv34_gen_vlc_ext(const uint8_t *bits, int size, VLC *vlc,
     int counts[17] = {0}, codes[17];
     uint16_t cw[MAX_VLC_SIZE];
     int maxbits;
+
+    av_assert1(size > 0);
 
     for (int i = 0; i < size; i++)
         counts[bits[i]]++;

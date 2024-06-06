@@ -44,53 +44,7 @@
   <component name="ChangeListManager">
     <list default="true" id="45ec317e-9f74-4354-bd97-bc2630dc4cad" name="Default Changelist" comment="KJSL: FFmpeg debug macOS Sonoma fun">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/aom_config.c.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/aom_config_defaults.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/aom_configure.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/aom_optimization.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/aom_version.pl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/compiler_flags.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/compiler_tests.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/cpu.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/dist.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/exports.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/exports_sources.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/generate_aom_config_templates.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/generate_exports.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/msvc_runtime.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/arm-ios-common.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/arm64-ios.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/arm64-linux-gcc.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/armv7-ios.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/armv7-linux-gcc.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/armv7s-ios.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/ios-simulator-common.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/mips32-linux-gcc.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/mips64-linux-gcc.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/x86-ios-simulator.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/x86-linux.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/x86-macos.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/toolchains/x86_64-ios-simulator.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/cmake/util.cmake" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/Android.mk" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/ads2armasm_ms.pl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/ads2gas.pl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/ads2gas_apple.pl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/armlink_adapter.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/configure.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/gen_asm_deps.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/gen_msvs_def.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/gen_msvs_sln.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/gen_msvs_vcxproj.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/ios-Info.plist" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/iosbuild.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/msvs_common.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/rtcd.pl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/thumb.pm" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/aom-master/build/make/version.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-Debug-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-Debug-log.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,6 +118,11 @@
     <configuration name="rtmp_clock_kevs3" type="BashProRunConfiguration" temporary="true">
       <option name="scriptPath" value="$USER_HOME$/rtmp_clock_kevs3" />
       <method v="2" />
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
     </configuration>
     <configuration name="Makefile" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
       <makefile filename="$PROJECT_DIR$/Makefile" target="" workingDirectory="" arguments="">
@@ -258,6 +217,8 @@
       <workItem from="1698725863140" duration="1224000" />
       <workItem from="1698975490563" duration="133000" />
       <workItem from="1698975685772" duration="19000" />
+      <workItem from="1717634601655" duration="27000" />
+      <workItem from="1717634646325" duration="5000" />
     </task>
     <task id="LOCAL-00001" summary="[KJSL] HLS discos issue&#10;Adding force_dts_monotonicity from&#10;https://ffmpeg.org/pipermail/ffmpeg-devel/2018-March/226706.html&#10;http://ffmpeg.org/pipermail/ffmpeg-devel/attachments/20180316/739542e4/attachment.obj">
       <created>1567811310694</created>
@@ -569,7 +530,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/libavcodec/hevcdec.c</url>
-          <line>3216</line>
+          <line>3214</line>
           <option name="timeStamp" value="43" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
