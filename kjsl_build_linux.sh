@@ -134,11 +134,9 @@
 #cd ..
 
 # FFmpeg
-PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig:/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH" ./configure \
+PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH" ./configure \
   --prefix="/usr/local" \
   --pkg-config-flags="--static" \
-  --extra-cflags="-I$HOME/ffmpeg_build/include" \
-  --extra-ldflags="-L$HOME/ffmpeg_build/lib" \
   --extra-libs=-lpthread \
   --extra-libs=-lm \
   --enable-gpl \
