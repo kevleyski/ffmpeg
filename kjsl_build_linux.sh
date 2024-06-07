@@ -28,7 +28,7 @@ cd $HERE/deps || exit
 curl -O -L http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
 tar xzvf yasm-1.3.0.tar.gz
 mv yasm-1.3.0 yasm
-cd yasm-1.3.0
+cd yasm
 ./configure --prefix="$HERE/deps" --bindir="$HERE/bin"
 make -j $(nproc)
 make install
