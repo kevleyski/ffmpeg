@@ -893,7 +893,6 @@ static av_cold int vaapi_encode_av1_init(AVCodecContext *avctx)
     if (ret < 0)
         return ret;
 
-    attr.type = VAConfigAttribEncAV1;
     vas = vaGetConfigAttributes(ctx->hwctx->display,
                                 ctx->va_profile,
                                 ctx->va_entrypoint,
@@ -910,7 +909,6 @@ static av_cold int vaapi_encode_av1_init(AVCodecContext *avctx)
         priv->attr.value = attr.value;
     }
 
-    attr.type = VAConfigAttribEncAV1Ext1;
     vas = vaGetConfigAttributes(ctx->hwctx->display,
                                 ctx->va_profile,
                                 ctx->va_entrypoint,
@@ -928,7 +926,6 @@ static av_cold int vaapi_encode_av1_init(AVCodecContext *avctx)
     }
 
     /** This attr provides essential indicators, return error if not support. */
-    attr.type = VAConfigAttribEncAV1Ext2;
     vas = vaGetConfigAttributes(ctx->hwctx->display,
                                 ctx->va_profile,
                                 ctx->va_entrypoint,
