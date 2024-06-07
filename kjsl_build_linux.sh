@@ -1,6 +1,6 @@
 # KJSL build everything on Linux...
 
-// git clone https://github.com/kevleyski/FFmpeg.git ~/ffmpeg_sources
+# git clone https://github.com/kevleyski/FFmpeg.git ~/ffmpeg_sources
 
 ##nasm
 #
