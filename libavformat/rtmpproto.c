@@ -3157,6 +3157,7 @@ static const AVOption rtmp_options[] = {
     {"listen",      "Listen for incoming rtmp connections", OFFSET(listen), AV_OPT_TYPE_INT, {.i64 = 0}, INT_MIN, INT_MAX, DEC, .unit = "rtmp_listen" },
     {"tcp_nodelay", "Use TCP_NODELAY to disable Nagle's algorithm", OFFSET(tcp_nodelay), AV_OPT_TYPE_INT, {.i64 = 0}, 0, 1, DEC|ENC},
     {"timeout", "Maximum timeout (in seconds) to wait for incoming connections. -1 is infinite. Implies -rtmp_listen 1",  OFFSET(listen_timeout), AV_OPT_TYPE_INT, {.i64 = -1}, INT_MIN, INT_MAX, DEC, .unit = "rtmp_listen" },
+    {"rtmp_enhanced_kjsl", "KJSL RTMP Enhancment tests", OFFSET(enhanced_codecs), AV_OPT_TYPE_STRING, {.str = NULL }, 0, 0, ENC},
     { NULL },
 };
 
