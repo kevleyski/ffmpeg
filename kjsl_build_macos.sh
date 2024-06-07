@@ -26,10 +26,10 @@ PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH LDF
 --enable-libvpx --enable-libx264 --enable-libx265 --enable-libxvid --enable-ffplay \
 --enable-libtesseract \
 --enable-libsrt \
+--enable-gcrypt \
 --enable-librtmp \
 --enable-libflite \
---enable-libmp3lame \
---disable-stripping
+--enable-libmp3lame
 
 make -j$(($(nproc)+1))
 sudo make install
