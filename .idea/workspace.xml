@@ -44,7 +44,8 @@
   <component name="ChangeListManager">
     <list default="true" id="45ec317e-9f74-4354-bd97-bc2630dc4cad" name="Default Changelist" comment="KJSL: FFmpeg debug macOS Sonoma fun">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-Debug-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-Debug-log.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libavfilter/trim.c" beforeDir="false" afterPath="$PROJECT_DIR$/libavfilter/trim.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -163,9 +164,9 @@
       <item itemvalue="Custom Build Application.ffmpeg (hls discos)" />
       <item itemvalue="Custom Build Application.ffmpeg (srt)" />
       <item itemvalue="Custom Build Application.ffmpeg (rtmp)" />
-      <item itemvalue="Makefile Target.Makefile" />
       <item itemvalue="Makefile Target.all" />
       <item itemvalue="Makefile Target.ffprobe" />
+      <item itemvalue="Makefile Target.Makefile" />
       <item itemvalue="Makefile Target.distclean" />
       <item itemvalue="Makefile Target.build" />
       <item itemvalue="Shell Script.kjsl_build_osx.sh" />
@@ -347,10 +348,9 @@
     <option name="version" value="3" />
   </component>
   <component name="VCPKGProject">
-    <isAutomaticEditVcpkgJson value="false" />
     <isAutomaticCheckingOnLaunch value="false" />
     <isAutomaticFoundErrors value="true" />
-    <isAutomaticFoundErrors value="true" />
+    <isAutomaticReloadCMake value="true" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
