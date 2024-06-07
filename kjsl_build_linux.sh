@@ -150,8 +150,8 @@ PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH" .
   --enable-libx264 \
   --enable-libx265 \
   --enable-libdav1d \
+  --enable-libsvtav1 \
   --enable-openssl \
-  --enable-libaom \
   --enable-nonfree \
   --enable-libxvid --enable-ffplay \
   --enable-libtesseract \
