@@ -11,69 +11,17 @@ export PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr
 # build FFmpeg (with AV1, srt, tesseract and)
 LDFLAGS="-Wl,-ld_classic,-framework,CoreFoundation -Wl,-framework,Security -Wl,-framework,VideoToolbox -Wl,-framework,CoreMedia -Wl,-framework,CoreVideo" LIBFFI_CFLAGS=-I/usr/include/ffi LIBFFI_LIBS=-lffi ./configure  --prefix=/usr/local --enable-gpl --enable-nonfree \
 --enable-postproc \
---enable-shared \
---enable-pthreads \
---enable-version3 \
---enable-videotoolbox --enable-audiotoolbox \
---enable-libfdk-aac \
---enable-libfreetype \
---enable-libfontconfig \
---enable-libfreetype \
---enable-libfribidi \
---enable-libharfbuzz \
---enable-libsvtav1 \
---enable-libopus --enable-libvorbis \
---enable-libopenjpeg --enable-avfilter \
---enable-libvpx --enable-libx264 --enable-libx265 \
---enable-libtesseract \
---enable-libsrt \
---enable-pthreads \
---enable-version3 \
---cc=clang \
---host-cflags= \
---host-ldflags='-Wl,-ld_classic' \
---enable-ffplay \
---enable-gnutls \
---enable-gpl \
---enable-libaom \
---enable-libaribb24 \
---enable-libbluray \
---enable-libdav1d \
---enable-libharfbuzz \
---enable-libjxl \
---enable-libmp3lame \
---enable-libopus \
---enable-librav1e \
---enable-librist \
---enable-librubberband \
---enable-libsnappy \
---enable-libsrt \
---enable-libssh \
---enable-libsvtav1 \
---enable-libtheora \
---enable-libvidstab \
---enable-libvmaf \
---enable-libvorbis \
---enable-libwebp \
---enable-libxml2 \
---enable-libxvid \
---enable-lzma \
---enable-libfontconfig \
---enable-libfreetype \
---enable-frei0r \
---enable-libass \
---enable-libopencore-amrnb \
---enable-libopencore-amrwb \
---enable-libopenjpeg \
---enable-libspeex \
---enable-libsoxr \
---enable-libzmq \
---enable-libzimg \
---disable-libjack \
---disable-indev=jack \
---enable-neon \
---enable-librtmp
-
+--enable-shared --enable-pthreads --enable-version3 --cc=clang \
+--host-cflags= --host-ldflags='-Wl,-ld_classic' --enable-ffplay --enable-gnutls \
+--enable-gpl --enable-libaom --enable-libaribb24 --enable-libbluray --enable-libdav1d \
+--enable-libharfbuzz --enable-libjxl --enable-libmp3lame --enable-libopus --enable-librav1e \
+--enable-librist --enable-librubberband --enable-libsnappy --enable-libsrt --enable-libssh \
+--enable-libsvtav1 --enable-libtesseract --enable-libtheora --enable-libvidstab --enable-libvmaf \
+--enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx264 --enable-libx265 \
+--enable-libxml2 --enable-libxvid --enable-lzma --enable-libfontconfig --enable-libfreetype \
+--enable-frei0r --enable-libass --enable-libopencore-amrnb --enable-libopencore-amrwb \
+--enable-libopenjpeg --enable-libspeex --enable-libsoxr --enable-libzmq --enable-libzimg \
+--disable-libjack --disable-indev=jack --enable-videotoolbox --enable-audiotoolbox --enable-neon
 
 make -j$(($(nproc)+1))
 sudo make install
