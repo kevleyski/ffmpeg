@@ -6,10 +6,10 @@ if [ ! -d /opt/homebrew/Cellar/x264 ]; then
   brew install automake pkg-config fdk-aac git lame libass libtool libvorbis libvpx opus sdl shtool texi2html wget x264 x265 xvid nasm yasm openssl rtmpdump freetype graphite2 harfbuzz fontconfig fribidi coreutils tesseract libvmaf theora
 fi
 
-export PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH
 
 # build FFmpeg (with AV1, srt, tesseract and)
 LDFLAGS="-Wl,-ld_classic,-framework,CoreFoundation -Wl,-framework,Security -Wl,-framework,VideoToolbox -Wl,-framework,CoreMedia -Wl,-framework,CoreVideo" LIBFFI_CFLAGS=-I/usr/include/ffi LIBFFI_LIBS=-lffi ./configure  --prefix=/usr/local --enable-gpl --enable-nonfree \
+--extra-ldflags="-L/opt/homebrew/lib" --extra-cflags="-I/opt/homebrew/include" \
 --enable-postproc \
 --enable-shared --enable-pthreads --enable-version3 --cc=clang \
 --host-cflags= --host-ldflags='-Wl,-ld_classic' --enable-ffplay --enable-gnutls \
