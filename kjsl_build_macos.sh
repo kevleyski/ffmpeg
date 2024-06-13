@@ -3,7 +3,7 @@
 # KJSL: script to build FFmpeg debug on MacOS
 
 if [ ! -d /opt/homebrew/Cellar/x264 ]; then
-  brew install automake fdk-aac git lame libass libtool libvorbis libvpx opus sdl shtool texi2html wget x264 x265 xvid nasm yasm openssl rtmpdump freetype graphite2 harfbuzz fontconfig fribidi coreutils tesseract
+  brew install automake fdk-aac git lame libass libtool libvorbis libvpx opus sdl shtool texi2html wget x264 x265 xvid nasm yasm openssl rtmpdump freetype graphite2 harfbuzz fontconfig coreutils tesseract libvmaf
 fi
 
 export PKG_CONFIG_PATH=/opt/homebrew/lib/pkgconfig:/usr/local/lib/pkgconfig:/usr/lib/pkgconfig:$PKG_CONFIG_PATH
@@ -19,7 +19,6 @@ LDFLAGS="-Wl,-ld_classic,-framework,CoreFoundation -Wl,-framework,Security -Wl,-
 --enable-libfreetype \
 --enable-libfontconfig \
 --enable-libfreetype \
---enable-libfribidi \
 --enable-libharfbuzz \
 --enable-libsvtav1 \
 --enable-libopus --enable-libvorbis \
