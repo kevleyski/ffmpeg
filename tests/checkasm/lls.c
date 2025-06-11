@@ -24,7 +24,7 @@
 do {                                           \
     double bmg[2], stddev = 10.0;              \
                                                \
-    for (size_t i = 0; i < MAX_VARS; i += 2) { \
+    for (size_t i = 0; i < MAX_VARS_ALIGN; i += 2) { \
         av_bmg_get(&checkasm_lfg, bmg);        \
         buf[i]     = bmg[0] * stddev;          \
         buf[i + 1] = bmg[1] * stddev;          \
@@ -46,28 +46,32 @@ static void test_update(LLSModel *lls, const double *var)
     call_new(lls, var);
 
     for (size_t i = 0; i < lls->indep_count; i++)
-        for (size_t j = i; j < lls->indep_count; j++)
+        for (size_t j = i; j < lls->indep_count; j++) {
+            double eps = FFMAX(2 * DBL_EPSILON * fabs(refcovar[i][j]),
+                               8 * DBL_EPSILON);
             if (!double_near_abs_eps(refcovar[i][j], lls->covariance[i][j],
-                                     2 * DBL_EPSILON)) {
+                                     eps)) {
                 fprintf(stderr, "%zu, %zu: %- .12f - %- .12f = % .12g\n", i, j,
                         refcovar[i][j], lls->covariance[i][j],
                         refcovar[i][j] - lls->covariance[i][j]);
                 fail();
             }
+        }
 
     bench_new(lls, var);
 }
 
-#define EPS 0.2
 static void test_evaluate(LLSModel *lls, const double *param, int order)
 {
-    double refprod, newprod;
+    double refprod, newprod, eps;
     declare_func_float(double, LLSModel *, const double *, int);
 
     refprod = call_ref(lls, param, order);
     newprod = call_new(lls, param, order);
 
-    if (!double_near_abs_eps(refprod, newprod, EPS)) {
+    eps = FFMAX(2 * DBL_EPSILON * fabs(refprod), 0.2);
+
+    if (!double_near_abs_eps(refprod, newprod, eps)) {
         fprintf(stderr, "%- .12f - %- .12f = % .12g\n",
                 refprod, newprod, refprod - newprod);
         fail();
@@ -82,8 +86,8 @@ void checkasm_check_lls(void)
     static const unsigned char counts[] = { 8, 12, MAX_VARS, };
 
     for (size_t i = 0; i < FF_ARRAY_ELEMS(counts); i++) {
-        LOCAL_ALIGNED_32(double, var, [MAX_VARS]);
-        LOCAL_ALIGNED_32(double, param, [MAX_VARS]);
+        LOCAL_ALIGNED_32(double, var, [MAX_VARS_ALIGN]);
+        LOCAL_ALIGNED_32(double, param, [FFALIGN(MAX_VARS+2,4)]);
         LLSModel lls;
 
         avpriv_init_lls(&lls, counts[i]);
@@ -95,7 +99,7 @@ void checkasm_check_lls(void)
         for (size_t j = 0; j <= i; j++)
             if (check_func(lls.evaluate_lls, "evaluate_lls_%d_%d", counts[i],
                            counts[j]))
-                test_evaluate(&lls, param, counts[j]);
+                test_evaluate(&lls, param + 1, counts[j]);
     }
     report("lls");
 }

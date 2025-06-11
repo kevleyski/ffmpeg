@@ -382,7 +382,7 @@ static int decode_wmv9(AVCodecContext *avctx, const uint8_t *buf, int buf_size,
     MSS12Context *c   = &ctx->c;
     VC1Context *v     = avctx->priv_data;
     MpegEncContext *s = &v->s;
-    AVFrame *f;
+    MPVWorkPicture *f;
     int ret;
 
     ff_mpeg_flush(avctx);
@@ -431,7 +431,7 @@ static int decode_wmv9(AVCodecContext *avctx, const uint8_t *buf, int buf_size,
 
     ff_mpv_frame_end(s);
 
-    f = s->current_picture.f;
+    f = &s->cur_pic;
 
     if (v->respic == 3) {
         ctx->dsp.upsample_plane(f->data[0], f->linesize[0], w,      h);
@@ -844,7 +844,7 @@ static av_cold int wmv9_init(AVCodecContext *avctx)
     v->resync_marker   = 0;
     v->rangered        = 0;
 
-    v->s.max_b_frames = avctx->max_b_frames = 0;
+    v->max_b_frames    = avctx->max_b_frames = 0;
     v->quantizer_mode = 0;
 
     v->finterpflag = 0;

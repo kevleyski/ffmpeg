@@ -1,12 +1,15 @@
 FATE_CHECKASM = fate-checkasm-aacencdsp                                 \
                 fate-checkasm-aacpsdsp                                  \
                 fate-checkasm-ac3dsp                                    \
+                fate-checkasm-aes                                       \
                 fate-checkasm-af_afir                                   \
                 fate-checkasm-alacdsp                                   \
+                fate-checkasm-apv_dsp                                   \
                 fate-checkasm-audiodsp                                  \
                 fate-checkasm-av_tx                                     \
                 fate-checkasm-blockdsp                                  \
                 fate-checkasm-bswapdsp                                  \
+                fate-checkasm-diracdsp                                  \
                 fate-checkasm-exrdsp                                    \
                 fate-checkasm-fdctdsp                                   \
                 fate-checkasm-fixed_dsp                                 \
@@ -33,6 +36,7 @@ FATE_CHECKASM = fate-checkasm-aacencdsp                                 \
                 fate-checkasm-llviddspenc                               \
                 fate-checkasm-lpc                                       \
                 fate-checkasm-motion                                    \
+                fate-checkasm-mpegvideoencdsp                           \
                 fate-checkasm-opusdsp                                   \
                 fate-checkasm-pixblockdsp                               \
                 fate-checkasm-sbrdsp                                    \
@@ -41,8 +45,11 @@ FATE_CHECKASM = fate-checkasm-aacencdsp                                 \
                 fate-checkasm-svq1enc                                   \
                 fate-checkasm-synth_filter                              \
                 fate-checkasm-sw_gbrp                                   \
+                fate-checkasm-sw_range_convert                          \
                 fate-checkasm-sw_rgb                                    \
                 fate-checkasm-sw_scale                                  \
+                fate-checkasm-sw_yuv2rgb                                \
+                fate-checkasm-sw_yuv2yuv                                \
                 fate-checkasm-takdsp                                    \
                 fate-checkasm-utvideodsp                                \
                 fate-checkasm-v210dec                                   \

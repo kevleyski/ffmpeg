@@ -19,6 +19,7 @@
  */
 
 #include "codec_internal.h"
+#include "h263.h"
 #include "mpegvideo.h"
 #include "mpegvideodec.h"
 #include "h263data.h"
@@ -56,7 +57,6 @@ int ff_intel_h263_decode_picture_header(MpegEncContext *s)
         av_log(s->avctx, AV_LOG_ERROR, "Intel H.263 free format not supported\n");
         return -1;
     }
-    s->h263_plus = 0;
 
     s->pict_type = AV_PICTURE_TYPE_I + get_bits1(&s->gb);
 
@@ -118,9 +118,10 @@ int ff_intel_h263_decode_picture_header(MpegEncContext *s)
     /* PEI */
     if (skip_1stop_8data_bits(&s->gb) < 0)
         return AVERROR_INVALIDDATA;
-    s->f_code = 1;
 
-    ff_h263_show_pict_info(s);
+    s->gob_index = H263_GOB_HEIGHT(s->height);
+
+    ff_h263_show_pict_info(s, 0);
 
     return 0;
 }
@@ -132,8 +133,9 @@ const FFCodec ff_h263i_decoder = {
     .p.id           = AV_CODEC_ID_H263I,
     .priv_data_size = sizeof(MpegEncContext),
     .init           = ff_h263_decode_init,
-    .close          = ff_h263_decode_end,
     FF_CODEC_DECODE_CB(ff_h263_decode_frame),
+    .close          = ff_mpv_decode_close,
     .p.capabilities = AV_CODEC_CAP_DRAW_HORIZ_BAND | AV_CODEC_CAP_DR1,
-    .caps_internal  = FF_CODEC_CAP_SKIP_FRAME_FILL_PARAM,
+    .caps_internal  = FF_CODEC_CAP_INIT_CLEANUP |
+                      FF_CODEC_CAP_SKIP_FRAME_FILL_PARAM,
 };

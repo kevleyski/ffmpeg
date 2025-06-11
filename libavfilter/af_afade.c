@@ -29,7 +29,6 @@
 #include "audio.h"
 #include "avfilter.h"
 #include "filters.h"
-#include "internal.h"
 
 typedef struct AudioFadeContext {
     const AVClass *class;
@@ -434,17 +433,17 @@ static const AVFilterPad avfilter_af_afade_outputs[] = {
     },
 };
 
-const AVFilter ff_af_afade = {
-    .name          = "afade",
-    .description   = NULL_IF_CONFIG_SMALL("Fade in/out input audio."),
+const FFFilter ff_af_afade = {
+    .p.name        = "afade",
+    .p.description = NULL_IF_CONFIG_SMALL("Fade in/out input audio."),
+    .p.priv_class  = &afade_class,
+    .p.flags       = AVFILTER_FLAG_SUPPORT_TIMELINE_GENERIC,
     .priv_size     = sizeof(AudioFadeContext),
     .init          = init,
     FILTER_INPUTS(avfilter_af_afade_inputs),
     FILTER_OUTPUTS(avfilter_af_afade_outputs),
     FILTER_SAMPLEFMTS_ARRAY(sample_fmts),
-    .priv_class    = &afade_class,
     .process_command = process_command,
-    .flags         = AVFILTER_FLAG_SUPPORT_TIMELINE_GENERIC,
 };
 
 #endif /* CONFIG_AFADE_FILTER */
@@ -452,8 +451,8 @@ const AVFilter ff_af_afade = {
 #if CONFIG_ACROSSFADE_FILTER
 
 static const AVOption acrossfade_options[] = {
-    { "nb_samples",   "set number of samples for cross fade duration", OFFSET(nb_samples),   AV_OPT_TYPE_INT,    {.i64 = 44100}, 1, INT32_MAX/10, FLAGS },
-    { "ns",           "set number of samples for cross fade duration", OFFSET(nb_samples),   AV_OPT_TYPE_INT,    {.i64 = 44100}, 1, INT32_MAX/10, FLAGS },
+    { "nb_samples",   "set number of samples for cross fade duration", OFFSET(nb_samples),   AV_OPT_TYPE_INT64,  {.i64 = 44100}, 1, INT32_MAX/10, FLAGS },
+    { "ns",           "set number of samples for cross fade duration", OFFSET(nb_samples),   AV_OPT_TYPE_INT64,  {.i64 = 44100}, 1, INT32_MAX/10, FLAGS },
     { "duration",     "set cross fade duration",                       OFFSET(duration),     AV_OPT_TYPE_DURATION, {.i64 = 0 },  0, 60000000, FLAGS },
     { "d",            "set cross fade duration",                       OFFSET(duration),     AV_OPT_TYPE_DURATION, {.i64 = 0 },  0, 60000000, FLAGS },
     { "overlap",      "overlap 1st stream end with 2nd stream start",  OFFSET(overlap),      AV_OPT_TYPE_BOOL,   {.i64 = 1    }, 0,  1, FLAGS },
@@ -732,12 +731,12 @@ static const AVFilterPad avfilter_af_acrossfade_outputs[] = {
     },
 };
 
-const AVFilter ff_af_acrossfade = {
-    .name          = "acrossfade",
-    .description   = NULL_IF_CONFIG_SMALL("Cross fade two input audio streams."),
+const FFFilter ff_af_acrossfade = {
+    .p.name        = "acrossfade",
+    .p.description = NULL_IF_CONFIG_SMALL("Cross fade two input audio streams."),
+    .p.priv_class  = &acrossfade_class,
     .priv_size     = sizeof(AudioFadeContext),
     .activate      = activate,
-    .priv_class    = &acrossfade_class,
     FILTER_INPUTS(avfilter_af_acrossfade_inputs),
     FILTER_OUTPUTS(avfilter_af_acrossfade_outputs),
     FILTER_SAMPLEFMTS_ARRAY(sample_fmts),

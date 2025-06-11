@@ -24,8 +24,8 @@
 #include "libavutil/pixdesc.h"
 #include "libavutil/xga_font_data.h"
 #include "avfilter.h"
+#include "filters.h"
 #include "formats.h"
-#include "internal.h"
 #include "video.h"
 
 typedef struct ThreadData {
@@ -3517,15 +3517,15 @@ static const AVFilterPad outputs[] = {
     },
 };
 
-const AVFilter ff_vf_waveform = {
-    .name          = "waveform",
-    .description   = NULL_IF_CONFIG_SMALL("Video waveform monitor."),
+const FFFilter ff_vf_waveform = {
+    .p.name        = "waveform",
+    .p.description = NULL_IF_CONFIG_SMALL("Video waveform monitor."),
+    .p.priv_class  = &waveform_class,
+    .p.flags       = AVFILTER_FLAG_SLICE_THREADS,
     .priv_size     = sizeof(WaveformContext),
-    .priv_class    = &waveform_class,
     .uninit        = uninit,
     FILTER_INPUTS(inputs),
     FILTER_OUTPUTS(outputs),
     FILTER_QUERY_FUNC(query_formats),
-    .flags         = AVFILTER_FLAG_SLICE_THREADS,
     .process_command = ff_filter_process_command,
 };

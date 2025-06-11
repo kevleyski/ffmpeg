@@ -166,6 +166,7 @@ static av_cold int che_configure(AACDecContext *ac,
             ac->proc.sbr_ctx_close(ac->che[type][id]);
         }
         av_freep(&ac->che[type][id]);
+        memset(ac->output_element, 0, sizeof(ac->output_element));
     }
     return 0;
 }
@@ -537,7 +538,9 @@ static av_cold void flush(AVCodecContext *avctx)
         }
     }
 
+#if CONFIG_AAC_DECODER
     ff_aac_usac_reset_state(ac, &ac->oc[1]);
+#endif
 }
 
 /**
@@ -1046,7 +1049,6 @@ static int decode_audio_specific_config_gb(AACDecContext *ac,
             return ret;
         break;
 #if CONFIG_AAC_DECODER
-    case AOT_USAC_NOSBR: /* fallthrough */
     case AOT_USAC:
         if ((ret = ff_aac_usac_config_decode(ac, avctx, gb,
                                              oc, m4ac->chan_config)) < 0)
@@ -1096,22 +1098,6 @@ static int decode_audio_specific_config(AACDecContext *ac,
                                            sync_extension);
 }
 
-static int sample_rate_idx (int rate)
-{
-         if (92017 <= rate) return 0;
-    else if (75132 <= rate) return 1;
-    else if (55426 <= rate) return 2;
-    else if (46009 <= rate) return 3;
-    else if (37566 <= rate) return 4;
-    else if (27713 <= rate) return 5;
-    else if (23004 <= rate) return 6;
-    else if (18783 <= rate) return 7;
-    else if (13856 <= rate) return 8;
-    else if (11502 <= rate) return 9;
-    else if (9391  <= rate) return 10;
-    else                    return 11;
-}
-
 static av_cold int decode_close(AVCodecContext *avctx)
 {
     AACDecContext *ac = avctx->priv_data;
@@ -1120,9 +1106,11 @@ static av_cold int decode_close(AVCodecContext *avctx)
         OutputConfiguration *oc = &ac->oc[i];
         AACUSACConfig *usac = &oc->usac;
         for (int j = 0; j < usac->nb_elems; j++) {
-            AACUsacElemConfig *ec = &usac->elems[i];
+            AACUsacElemConfig *ec = &usac->elems[j];
             av_freep(&ec->ext.pl_data);
         }
+
+        av_channel_layout_uninit(&ac->oc[i].ch_layout);
     }
 
     for (int type = 0; type < FF_ARRAY_ELEMS(ac->che); type++) {
@@ -1212,7 +1200,7 @@ av_cold int ff_aac_decode_init(AVCodecContext *avctx)
         uint8_t layout_map[MAX_ELEM_ID*4][3];
         int layout_map_tags;
 
-        sr = sample_rate_idx(avctx->sample_rate);
+        sr = ff_aac_sample_rate_idx(avctx->sample_rate);
         ac->oc[1].m4ac.sampling_index = sr;
         ac->oc[1].m4ac.channels = avctx->ch_layout.nb_channels;
         ac->oc[1].m4ac.sbr = -1;
@@ -1335,6 +1323,7 @@ static int decode_ics_info(AACDecContext *ac, IndividualChannelStream *ics,
         ics->use_kb_window[1]   = ics->use_kb_window[0];
         ics->use_kb_window[0]   = get_bits1(gb);
     }
+    ics->prev_num_window_groups = FFMAX(ics->num_window_groups, 1);
     ics->num_window_groups  = 1;
     ics->group_len[0]       = 1;
     if (ics->window_sequence[0] == EIGHT_SHORT_SEQUENCE) {
@@ -1571,8 +1560,7 @@ int ff_aac_decode_tns(AACDecContext *ac, TemporalNoiseShaping *tns,
                       GetBitContext *gb, const IndividualChannelStream *ics)
 {
     int tns_max_order = INT32_MAX;
-    const int is_usac = ac->oc[1].m4ac.object_type == AOT_USAC ||
-                        ac->oc[1].m4ac.object_type == AOT_USAC_NOSBR;
+    const int is_usac = ac->oc[1].m4ac.object_type == AOT_USAC;
     int w, filt, i, coef_len, coef_res, coef_compress;
     const int is8 = ics->window_sequence[0] == EIGHT_SHORT_SEQUENCE;
 
@@ -1759,6 +1747,7 @@ int ff_aac_decode_ics(AACDecContext *ac, SingleChannelElement *sce,
 
     return 0;
 fail:
+    memset(sce->sfo, 0, sizeof(sce->sfo));
     tns->present = 0;
     return ret;
 }
@@ -2210,6 +2199,7 @@ static int aac_decode_er_frame(AVCodecContext *avctx, AVFrame *frame,
 
     ac->frame->nb_samples = samples;
     ac->frame->sample_rate = avctx->sample_rate;
+    ac->frame->flags |= AV_FRAME_FLAG_KEY;
     *got_frame_ptr = 1;
 
     skip_bits_long(gb, get_bits_left(gb));
@@ -2370,6 +2360,7 @@ static int decode_frame_ga(AVCodecContext *avctx, AACDecContext *ac,
     if (samples) {
         ac->frame->nb_samples = samples;
         ac->frame->sample_rate = avctx->sample_rate;
+        ac->frame->flags |= AV_FRAME_FLAG_KEY;
         *got_frame_ptr = 1;
     } else {
         av_frame_unref(ac->frame);
@@ -2400,7 +2391,8 @@ static int aac_decode_frame_int(AVCodecContext *avctx, AVFrame *frame,
     ac->frame = frame;
     *got_frame_ptr = 0;
 
-    if (show_bits(gb, 12) == 0xfff) {
+    // USAC can't be packed into ADTS due to field size limitations.
+    if (show_bits(gb, 12) == 0xfff && ac->oc[1].m4ac.object_type != AOT_USAC) {
         if ((err = parse_adts_frame_header(ac, gb)) < 0) {
             av_log(avctx, AV_LOG_ERROR, "Error decoding AAC frame header.\n");
             goto fail;
@@ -2421,8 +2413,7 @@ static int aac_decode_frame_int(AVCodecContext *avctx, AVFrame *frame,
 
     ac->tags_mapped = 0;
 
-    if ((ac->oc[1].m4ac.object_type == AOT_USAC) ||
-        (ac->oc[1].m4ac.object_type == AOT_USAC_NOSBR)) {
+    if (ac->oc[1].m4ac.object_type == AOT_USAC) {
         if (ac->is_fixed) {
             avpriv_report_missing_feature(ac->avctx,
                                           "AAC USAC fixed-point decoding");
@@ -2557,12 +2548,10 @@ const FFCodec ff_aac_decoder = {
     .init            = ff_aac_decode_init_float,
     .close           = decode_close,
     FF_CODEC_DECODE_CB(aac_decode_frame),
-    .p.sample_fmts   = (const enum AVSampleFormat[]) {
-        AV_SAMPLE_FMT_FLTP, AV_SAMPLE_FMT_NONE
-    },
+    CODEC_SAMPLEFMTS(AV_SAMPLE_FMT_FLTP),
     .p.capabilities  = AV_CODEC_CAP_CHANNEL_CONF | AV_CODEC_CAP_DR1,
     .caps_internal   = FF_CODEC_CAP_INIT_CLEANUP,
-    .p.ch_layouts    = ff_aac_ch_layout,
+    CODEC_CH_LAYOUTS_ARRAY(ff_aac_ch_layout),
     .flush = flush,
     .p.profiles      = NULL_IF_CONFIG_SMALL(ff_aac_profiles),
 };
@@ -2579,12 +2568,10 @@ const FFCodec ff_aac_fixed_decoder = {
     .init            = ff_aac_decode_init_fixed,
     .close           = decode_close,
     FF_CODEC_DECODE_CB(aac_decode_frame),
-    .p.sample_fmts   = (const enum AVSampleFormat[]) {
-        AV_SAMPLE_FMT_S32P, AV_SAMPLE_FMT_NONE
-    },
+    CODEC_SAMPLEFMTS(AV_SAMPLE_FMT_S32P),
     .p.capabilities  = AV_CODEC_CAP_CHANNEL_CONF | AV_CODEC_CAP_DR1,
     .caps_internal   = FF_CODEC_CAP_INIT_CLEANUP,
-    .p.ch_layouts    = ff_aac_ch_layout,
+    CODEC_CH_LAYOUTS_ARRAY(ff_aac_ch_layout),
     .p.profiles      = NULL_IF_CONFIG_SMALL(ff_aac_profiles),
     .flush = flush,
 };

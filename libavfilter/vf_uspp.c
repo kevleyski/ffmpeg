@@ -35,7 +35,8 @@
 #include "libavutil/pixdesc.h"
 #include "libavutil/video_enc_params.h"
 #include "libavcodec/avcodec.h"
-#include "internal.h"
+
+#include "filters.h"
 #include "qp_table.h"
 #include "avfilter.h"
 #include "video.h"
@@ -548,14 +549,14 @@ static const AVFilterPad uspp_inputs[] = {
     },
 };
 
-const AVFilter ff_vf_uspp = {
-    .name            = "uspp",
-    .description     = NULL_IF_CONFIG_SMALL("Apply Ultra Simple / Slow Post-processing filter."),
+const FFFilter ff_vf_uspp = {
+    .p.name          = "uspp",
+    .p.description   = NULL_IF_CONFIG_SMALL("Apply Ultra Simple / Slow Post-processing filter."),
+    .p.priv_class    = &uspp_class,
+    .p.flags         = AVFILTER_FLAG_SUPPORT_TIMELINE_INTERNAL | AVFILTER_FLAG_SLICE_THREADS,
     .priv_size       = sizeof(USPPContext),
     .uninit          = uninit,
     FILTER_INPUTS(uspp_inputs),
     FILTER_OUTPUTS(ff_video_default_filterpad),
     FILTER_PIXFMTS_ARRAY(pix_fmts),
-    .priv_class      = &uspp_class,
-    .flags           = AVFILTER_FLAG_SUPPORT_TIMELINE_INTERNAL | AVFILTER_FLAG_SLICE_THREADS,
 };

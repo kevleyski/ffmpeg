@@ -34,7 +34,7 @@
 
 static void dpb_add(CUVIDHEVCPICPARAMS *pp, int idx, const HEVCFrame *src)
 {
-    FrameDecodeData *fdd = (FrameDecodeData*)src->f->private_ref->data;
+    FrameDecodeData *fdd = src->f->private_ref;
     const NVDECFrame *cf = fdd->hwaccel_priv;
 
     pp->RefPicIdx[idx]      = cf ? cf->idx : -1;
@@ -44,8 +44,8 @@ static void dpb_add(CUVIDHEVCPICPARAMS *pp, int idx, const HEVCFrame *src)
 
 static void fill_scaling_lists(CUVIDHEVCPICPARAMS *ppc, const HEVCContext *s)
 {
-    const ScalingList *sl = s->ps.pps->scaling_list_data_present_flag ?
-                            &s->ps.pps->scaling_list : &s->ps.sps->scaling_list;
+    const ScalingList *sl = s->pps->scaling_list_data_present_flag ?
+                            &s->pps->scaling_list : &s->pps->sps->scaling_list;
     int i, j, pos;
 
     for (i = 0; i < 6; i++) {
@@ -70,11 +70,13 @@ static void fill_scaling_lists(CUVIDHEVCPICPARAMS *ppc, const HEVCContext *s)
 }
 
 static int nvdec_hevc_start_frame(AVCodecContext *avctx,
+                                  const AVBufferRef *buffer_ref,
                                   const uint8_t *buffer, uint32_t size)
 {
     const HEVCContext *s = avctx->priv_data;
-    const HEVCPPS *pps = s->ps.pps;
-    const HEVCSPS *sps = s->ps.sps;
+    const HEVCLayerContext *l = &s->layers[s->cur_layer];
+    const HEVCPPS *pps = s->pps;
+    const HEVCSPS *sps = pps->sps;
 
     NVDECContext       *ctx = avctx->internal->hwaccel_priv_data;
     CUVIDPICPARAMS      *pp = &ctx->pic_params;
@@ -88,7 +90,7 @@ static int nvdec_hevc_start_frame(AVCodecContext *avctx,
     if (ret < 0)
         return ret;
 
-    fdd = (FrameDecodeData*)s->cur_frame->f->private_ref->data;
+    fdd = s->cur_frame->f->private_ref;
     cf  = (NVDECFrame*)fdd->hwaccel_priv;
 
     *pp = (CUVIDPICPARAMS) {
@@ -187,7 +189,7 @@ static int nvdec_hevc_start_frame(AVCodecContext *avctx,
 
             .NumBitsForShortTermRPSInSlice                = s->sh.short_term_rps ? s->sh.short_term_ref_pic_set_size : 0,
             .NumDeltaPocsOfRefRpsIdx                      = s->sh.short_term_rps ? s->sh.short_term_rps->rps_idx_num_delta_pocs : 0,
-            .NumPocTotalCurr                              = ff_hevc_frame_nb_refs(s),
+            .NumPocTotalCurr                              = ff_hevc_frame_nb_refs(&s->sh, pps, s->cur_layer),
             .NumPocStCurrBefore                           = s->rps[ST_CURR_BEF].nb_refs,
             .NumPocStCurrAfter                            = s->rps[ST_CURR_AFT].nb_refs,
             .NumPocLtCurr                                 = s->rps[LT_CURR].nb_refs,
@@ -225,8 +227,8 @@ static int nvdec_hevc_start_frame(AVCodecContext *avctx,
     }
 
     dpb_size = 0;
-    for (i = 0; i < FF_ARRAY_ELEMS(s->DPB); i++) {
-        const HEVCFrame *ref = &s->DPB[i];
+    for (i = 0; i < FF_ARRAY_ELEMS(l->DPB); i++) {
+        const HEVCFrame *ref = &l->DPB[i];
         if (!(ref->flags & (HEVC_FRAME_FLAG_SHORT_REF | HEVC_FRAME_FLAG_LONG_REF)))
             continue;
         if (dpb_size >= FF_ARRAY_ELEMS(ppc->RefPicIdx)) {
@@ -300,7 +302,7 @@ static int nvdec_hevc_frame_params(AVCodecContext *avctx,
                                    AVBufferRef *hw_frames_ctx)
 {
     const HEVCContext *s = avctx->priv_data;
-    const HEVCSPS *sps = s->ps.sps;
+    const HEVCSPS *sps = s->pps->sps;
     return ff_nvdec_frame_params(avctx, hw_frames_ctx, sps->temporal_layer[sps->max_sub_layers - 1].max_dec_pic_buffering + 1, 1);
 }
 

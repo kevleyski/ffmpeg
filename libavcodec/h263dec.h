@@ -47,7 +47,6 @@ int ff_h263_decode_motion(MpegEncContext * s, int pred, int f_code);
 int ff_h263_decode_init(AVCodecContext *avctx);
 int ff_h263_decode_frame(AVCodecContext *avctx, AVFrame *frame,
                          int *got_frame, AVPacket *avpkt);
-int ff_h263_decode_end(AVCodecContext *avctx);
 void ff_h263_decode_init_vlc(void);
 int ff_h263_decode_picture_header(MpegEncContext *s);
 int ff_h263_decode_gob_header(MpegEncContext *s);
@@ -56,7 +55,7 @@ int ff_h263_decode_mba(MpegEncContext *s);
 /**
  * Print picture info if FF_DEBUG_PICT_INFO is set.
  */
-void ff_h263_show_pict_info(MpegEncContext *s);
+void ff_h263_show_pict_info(MpegEncContext *s, int h263_plus);
 
 int ff_intel_h263_decode_picture_header(MpegEncContext *s);
 int ff_h263_decode_mb(MpegEncContext *s,

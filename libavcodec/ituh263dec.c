@@ -59,25 +59,26 @@
 #define H263_MBTYPE_B_VLC_BITS 6
 #define CBPC_B_VLC_BITS 3
 
-static const int h263_mb_type_b_map[15]= {
-    MB_TYPE_DIRECT2 | MB_TYPE_L0L1,
-    MB_TYPE_DIRECT2 | MB_TYPE_L0L1 | MB_TYPE_CBP,
-    MB_TYPE_DIRECT2 | MB_TYPE_L0L1 | MB_TYPE_CBP | MB_TYPE_QUANT,
-                      MB_TYPE_L0                                 | MB_TYPE_16x16,
-                      MB_TYPE_L0   | MB_TYPE_CBP                 | MB_TYPE_16x16,
-                      MB_TYPE_L0   | MB_TYPE_CBP | MB_TYPE_QUANT | MB_TYPE_16x16,
-                      MB_TYPE_L1                                 | MB_TYPE_16x16,
-                      MB_TYPE_L1   | MB_TYPE_CBP                 | MB_TYPE_16x16,
-                      MB_TYPE_L1   | MB_TYPE_CBP | MB_TYPE_QUANT | MB_TYPE_16x16,
-                      MB_TYPE_L0L1                               | MB_TYPE_16x16,
-                      MB_TYPE_L0L1 | MB_TYPE_CBP                 | MB_TYPE_16x16,
-                      MB_TYPE_L0L1 | MB_TYPE_CBP | MB_TYPE_QUANT | MB_TYPE_16x16,
+static const int16_t h263_mb_type_b_map[15]= {
+    MB_TYPE_DIRECT2 | MB_TYPE_BIDIR_MV,
+    MB_TYPE_DIRECT2 | MB_TYPE_BIDIR_MV    | MB_TYPE_CBP,
+    MB_TYPE_DIRECT2 | MB_TYPE_BIDIR_MV    | MB_TYPE_CBP | MB_TYPE_QUANT,
+                      MB_TYPE_FORWARD_MV                                | MB_TYPE_16x16,
+                      MB_TYPE_FORWARD_MV  | MB_TYPE_CBP                 | MB_TYPE_16x16,
+                      MB_TYPE_FORWARD_MV  | MB_TYPE_CBP | MB_TYPE_QUANT | MB_TYPE_16x16,
+                      MB_TYPE_BACKWARD_MV                               | MB_TYPE_16x16,
+                      MB_TYPE_BACKWARD_MV | MB_TYPE_CBP                 | MB_TYPE_16x16,
+                      MB_TYPE_BACKWARD_MV | MB_TYPE_CBP | MB_TYPE_QUANT | MB_TYPE_16x16,
+                      MB_TYPE_BIDIR_MV                                  | MB_TYPE_16x16,
+                      MB_TYPE_BIDIR_MV    | MB_TYPE_CBP                 | MB_TYPE_16x16,
+                      MB_TYPE_BIDIR_MV    | MB_TYPE_CBP | MB_TYPE_QUANT | MB_TYPE_16x16,
     0, //stuffing
     MB_TYPE_INTRA4x4                | MB_TYPE_CBP,
     MB_TYPE_INTRA4x4                | MB_TYPE_CBP | MB_TYPE_QUANT,
 };
 
-void ff_h263_show_pict_info(MpegEncContext *s){
+void ff_h263_show_pict_info(MpegEncContext *s, int h263_plus)
+{
     if(s->avctx->debug&FF_DEBUG_PICT_INFO){
     av_log(s->avctx, AV_LOG_DEBUG, "qp:%d %c size:%d rnd:%d%s%s%s%s%s%s%s%s%s %d/%d\n",
          s->qscale, av_get_picture_type_char(s->pict_type),
@@ -85,7 +86,7 @@ void ff_h263_show_pict_info(MpegEncContext *s){
          s->obmc ? " AP" : "",
          s->umvplus ? " UMV" : "",
          s->h263_long_vectors ? " LONG" : "",
-         s->h263_plus ? " +" : "",
+         h263_plus ? " +" : "",
          s->h263_aic ? " AIC" : "",
          s->alt_inter_vlc ? " AIV" : "",
          s->modified_quant ? " MQ" : "",
@@ -125,9 +126,10 @@ static av_cold void h263_decode_init_vlc(void)
     ff_h263_init_rl_inter();
     VLC_INIT_RL(ff_h263_rl_inter, 554);
     INIT_FIRST_VLC_RL(ff_rl_intra_aic, 554);
-    VLC_INIT_STATIC_TABLE(h263_mbtype_b_vlc, H263_MBTYPE_B_VLC_BITS, 15,
-                          &ff_h263_mbtype_b_tab[0][1], 2, 1,
-                          &ff_h263_mbtype_b_tab[0][0], 2, 1, 0);
+    VLC_INIT_STATIC_SPARSE_TABLE(h263_mbtype_b_vlc, H263_MBTYPE_B_VLC_BITS, 15,
+                                 &ff_h263_mbtype_b_tab[0][1], 2, 1,
+                                 &ff_h263_mbtype_b_tab[0][0], 2, 1,
+                                 h263_mb_type_b_map, 2, 2, 0);
     VLC_INIT_STATIC_TABLE(cbpc_b_vlc, CBPC_B_VLC_BITS, 4,
                           &ff_cbpc_b_tab[0][1], 2, 1,
                           &ff_cbpc_b_tab[0][0], 2, 1, 0);
@@ -357,20 +359,20 @@ static void preview_obmc(MpegEncContext *s){
     do{
         if (get_bits1(&s->gb)) {
             /* skip mb */
-            mot_val = s->current_picture.motion_val[0][s->block_index[0]];
+            mot_val = s->cur_pic.motion_val[0][s->block_index[0]];
             mot_val[0       ]= mot_val[2       ]=
             mot_val[0+stride]= mot_val[2+stride]= 0;
             mot_val[1       ]= mot_val[3       ]=
             mot_val[1+stride]= mot_val[3+stride]= 0;
 
-            s->current_picture.mb_type[xy] = MB_TYPE_SKIP | MB_TYPE_16x16 | MB_TYPE_L0;
+            s->cur_pic.mb_type[xy] = MB_TYPE_SKIP | MB_TYPE_16x16 | MB_TYPE_FORWARD_MV;
             goto end;
         }
         cbpc = get_vlc2(&s->gb, ff_h263_inter_MCBPC_vlc, INTER_MCBPC_VLC_BITS, 2);
     }while(cbpc == 20);
 
     if(cbpc & 4){
-        s->current_picture.mb_type[xy] = MB_TYPE_INTRA;
+        s->cur_pic.mb_type[xy] = MB_TYPE_INTRA;
     }else{
         get_vlc2(&s->gb, ff_h263_cbpy_vlc, CBPY_VLC_BITS, 1);
         if (cbpc & 8) {
@@ -382,7 +384,7 @@ static void preview_obmc(MpegEncContext *s){
         }
 
         if ((cbpc & 16) == 0) {
-                s->current_picture.mb_type[xy] = MB_TYPE_16x16 | MB_TYPE_L0;
+                s->cur_pic.mb_type[xy] = MB_TYPE_16x16 | MB_TYPE_FORWARD_MV;
                 /* 16x16 motion prediction */
                 mot_val= ff_h263_pred_motion(s, 0, 0, &pred_x, &pred_y);
                 if (s->umvplus)
@@ -400,7 +402,7 @@ static void preview_obmc(MpegEncContext *s){
                 mot_val[1       ]= mot_val[3       ]=
                 mot_val[1+stride]= mot_val[3+stride]= my;
         } else {
-            s->current_picture.mb_type[xy] = MB_TYPE_8x8 | MB_TYPE_L0;
+            s->cur_pic.mb_type[xy] = MB_TYPE_8x8 | MB_TYPE_FORWARD_MV;
             for(i=0;i<4;i++) {
                 mot_val = ff_h263_pred_motion(s, i, 0, &pred_x, &pred_y);
                 if (s->umvplus)
@@ -534,12 +536,14 @@ static int h263_decode_block(MpegEncContext * s, int16_t * block,
                              int n, int coded)
 {
     int level, i, j, run;
-    RLTable *rl = &ff_h263_rl_inter;
+    const RLTable *rl = &ff_h263_rl_inter;
     const uint8_t *scan_table;
     GetBitContext gb= s->gb;
 
     scan_table = s->intra_scantable.permutated;
     if (s->h263_aic && s->mb_intra) {
+        if (!coded)
+            goto not_coded;
         rl = &ff_rl_intra_aic;
         i = 0;
         if (s->ac_pred) {
@@ -551,25 +555,24 @@ static int h263_decode_block(MpegEncContext * s, int16_t * block,
     } else if (s->mb_intra) {
         /* DC coef */
         if (CONFIG_RV10_DECODER && s->codec_id == AV_CODEC_ID_RV10) {
-          if (s->rv10_version == 3 && s->pict_type == AV_PICTURE_TYPE_I) {
-            int component, diff;
-            component = (n <= 3 ? 0 : n - 4 + 1);
-            level = s->last_dc[component];
-            if (s->rv10_first_dc_coded[component]) {
-                diff = ff_rv_decode_dc(s, n);
-                if (diff < 0)
-                    return -1;
-                level += diff;
-                level = level & 0xff; /* handle wrap round */
-                s->last_dc[component] = level;
+            if (s->rv10_version == 3 && s->pict_type == AV_PICTURE_TYPE_I) {
+                int component = (n <= 3 ? 0 : n - 4 + 1);
+                level = s->last_dc[component];
+                if (s->rv10_first_dc_coded[component]) {
+                    int diff = ff_rv_decode_dc(s, n);
+                    if (diff < 0)
+                        return -1;
+                    level += diff;
+                    level = level & 0xff; /* handle wrap round */
+                    s->last_dc[component] = level;
+                } else {
+                    s->rv10_first_dc_coded[component] = 1;
+                }
             } else {
-                s->rv10_first_dc_coded[component] = 1;
-            }
-          } else {
                 level = get_bits(&s->gb, 8);
                 if (level == 255)
                     level = 128;
-          }
+            }
         }else{
             level = get_bits(&s->gb, 8);
             if((level&0x7F) == 0){
@@ -586,8 +589,6 @@ static int h263_decode_block(MpegEncContext * s, int16_t * block,
         i = 0;
     }
     if (!coded) {
-        if (s->mb_intra && s->h263_aic)
-            goto not_coded;
         s->block_last_index[n] = i - 1;
         return 0;
     }
@@ -668,8 +669,8 @@ retry:
         block[j] = level;
     }
     }
-not_coded:
     if (s->mb_intra && s->h263_aic) {
+not_coded:
         h263_pred_acdc(s, block, n);
         i = 63;
     }
@@ -719,7 +720,7 @@ static int h263_get_modb(GetBitContext *gb, int pb_frame, int *cbpb)
 
 #define tab_size ((signed)FF_ARRAY_ELEMS(s->direct_scale_mv[0]))
 #define tab_bias (tab_size / 2)
-static inline void set_one_direct_mv(MpegEncContext *s, Picture *p, int i)
+static inline void set_one_direct_mv(MpegEncContext *s, const MPVPicture *p, int i)
 {
     int xy           = s->block_index[i];
     uint16_t time_pp = s->pp_time;
@@ -750,12 +751,12 @@ static inline void set_one_direct_mv(MpegEncContext *s, Picture *p, int i)
 static int set_direct_mv(MpegEncContext *s)
 {
     const int mb_index = s->mb_x + s->mb_y * s->mb_stride;
-    Picture *p = &s->next_picture;
+    const MPVPicture *p = s->next_pic.ptr;
     int colocated_mb_type = p->mb_type[mb_index];
     int i;
 
     if (s->codec_tag == AV_RL32("U263") && p->f->pict_type == AV_PICTURE_TYPE_I) {
-        p = &s->last_picture;
+        p = s->last_pic.ptr;
         colocated_mb_type = p->mb_type[mb_index];
     }
 
@@ -763,7 +764,7 @@ static int set_direct_mv(MpegEncContext *s)
         s->mv_type = MV_TYPE_8X8;
         for (i = 0; i < 4; i++)
             set_one_direct_mv(s, p, i);
-        return MB_TYPE_DIRECT2 | MB_TYPE_8x8 | MB_TYPE_L0L1;
+        return MB_TYPE_DIRECT2 | MB_TYPE_8x8 | MB_TYPE_BIDIR_MV;
     } else {
         set_one_direct_mv(s, p, 0);
         s->mv[0][1][0] =
@@ -780,7 +781,7 @@ static int set_direct_mv(MpegEncContext *s)
         s->mv[1][3][1] = s->mv[1][0][1];
         s->mv_type = MV_TYPE_8X8;
         // Note see prev line
-        return MB_TYPE_DIRECT2 | MB_TYPE_16x16 | MB_TYPE_L0L1;
+        return MB_TYPE_DIRECT2 | MB_TYPE_16x16 | MB_TYPE_BIDIR_MV;
     }
 }
 
@@ -803,7 +804,7 @@ int ff_h263_decode_mb(MpegEncContext *s,
                     s->block_last_index[i] = -1;
                 s->mv_dir = MV_DIR_FORWARD;
                 s->mv_type = MV_TYPE_16X16;
-                s->current_picture.mb_type[xy] = MB_TYPE_SKIP | MB_TYPE_16x16 | MB_TYPE_L0;
+                s->cur_pic.mb_type[xy] = MB_TYPE_SKIP | MB_TYPE_16x16 | MB_TYPE_FORWARD_MV;
                 s->mv[0][0][0] = 0;
                 s->mv[0][0][1] = 0;
                 s->mb_skipped = !(s->obmc | s->loop_filter);
@@ -841,7 +842,7 @@ int ff_h263_decode_mb(MpegEncContext *s,
 
         s->mv_dir = MV_DIR_FORWARD;
         if ((cbpc & 16) == 0) {
-            s->current_picture.mb_type[xy] = MB_TYPE_16x16 | MB_TYPE_L0;
+            s->cur_pic.mb_type[xy] = MB_TYPE_16x16 | MB_TYPE_FORWARD_MV;
             /* 16x16 motion prediction */
             s->mv_type = MV_TYPE_16X16;
             ff_h263_pred_motion(s, 0, 0, &pred_x, &pred_y);
@@ -866,7 +867,7 @@ int ff_h263_decode_mb(MpegEncContext *s,
             if (s->umvplus && (mx - pred_x) == 1 && (my - pred_y) == 1)
                skip_bits1(&s->gb); /* Bit stuffing to prevent PSC */
         } else {
-            s->current_picture.mb_type[xy] = MB_TYPE_8x8 | MB_TYPE_L0;
+            s->cur_pic.mb_type[xy] = MB_TYPE_8x8 | MB_TYPE_FORWARD_MV;
             s->mv_type = MV_TYPE_8X8;
             for(i=0;i<4;i++) {
                 mot_val = ff_h263_pred_motion(s, i, 0, &pred_x, &pred_y);
@@ -894,8 +895,8 @@ int ff_h263_decode_mb(MpegEncContext *s,
     } else if(s->pict_type==AV_PICTURE_TYPE_B) {
         int mb_type;
         const int stride= s->b8_stride;
-        int16_t *mot_val0 = s->current_picture.motion_val[0][2 * (s->mb_x + s->mb_y * stride)];
-        int16_t *mot_val1 = s->current_picture.motion_val[1][2 * (s->mb_x + s->mb_y * stride)];
+        int16_t *mot_val0 = s->cur_pic.motion_val[0][2 * (s->mb_x + s->mb_y * stride)];
+        int16_t *mot_val1 = s->cur_pic.motion_val[1][2 * (s->mb_x + s->mb_y * stride)];
 //        const int mv_xy= s->mb_x + 1 + s->mb_y * s->mb_stride;
 
         //FIXME ugly
@@ -911,8 +912,6 @@ int ff_h263_decode_mb(MpegEncContext *s,
                 av_log(s->avctx, AV_LOG_ERROR, "b mb_type damaged at %d %d\n", s->mb_x, s->mb_y);
                 return SLICE_ERROR;
             }
-
-            mb_type= h263_mb_type_b_map[ mb_type ];
         }while(!mb_type);
 
         s->mb_intra = IS_INTRA(mb_type);
@@ -952,7 +951,7 @@ int ff_h263_decode_mb(MpegEncContext *s,
             s->mv_type= MV_TYPE_16X16;
 //FIXME UMV
 
-            if(USES_LIST(mb_type, 0)){
+            if (HAS_FORWARD_MV(mb_type)) {
                 int16_t *mot_val= ff_h263_pred_motion(s, 0, 0, &pred_x, &pred_y);
                 s->mv_dir = MV_DIR_FORWARD;
 
@@ -979,7 +978,7 @@ int ff_h263_decode_mb(MpegEncContext *s,
                 mot_val[1       ]= mot_val[3       ]= mot_val[1+2*stride]= mot_val[3+2*stride]= my;
             }
 
-            if(USES_LIST(mb_type, 1)){
+            if (HAS_BACKWARD_MV(mb_type)) {
                 int16_t *mot_val= ff_h263_pred_motion(s, 0, 1, &pred_x, &pred_y);
                 s->mv_dir |= MV_DIR_BACKWARD;
 
@@ -1007,7 +1006,7 @@ int ff_h263_decode_mb(MpegEncContext *s,
             }
         }
 
-        s->current_picture.mb_type[xy] = mb_type;
+        s->cur_pic.mb_type[xy] = mb_type;
     } else { /* I-Frame */
         do{
             cbpc = get_vlc2(&s->gb, ff_h263_intra_MCBPC_vlc, INTRA_MCBPC_VLC_BITS, 2);
@@ -1022,11 +1021,11 @@ int ff_h263_decode_mb(MpegEncContext *s,
         dquant = cbpc & 4;
         s->mb_intra = 1;
 intra:
-        s->current_picture.mb_type[xy] = MB_TYPE_INTRA;
+        s->cur_pic.mb_type[xy] = MB_TYPE_INTRA;
         if (s->h263_aic) {
             s->ac_pred = get_bits1(&s->gb);
             if(s->ac_pred){
-                s->current_picture.mb_type[xy] = MB_TYPE_INTRA | MB_TYPE_ACPRED;
+                s->cur_pic.mb_type[xy] = MB_TYPE_INTRA | MB_TYPE_ACPRED;
 
                 s->h263_aic_dir = get_bits1(&s->gb);
             }
@@ -1091,6 +1090,7 @@ int ff_h263_decode_picture_header(MpegEncContext *s)
 {
     int format, width, height, i, ret;
     uint32_t startcode;
+    int h263_plus;
 
     align_get_bits(&s->gb);
 
@@ -1139,7 +1139,7 @@ int ff_h263_decode_picture_header(MpegEncContext *s)
     */
 
     if (format != 7 && format != 6) {
-        s->h263_plus = 0;
+        h263_plus = 0;
         /* H.263v1 */
         width = ff_h263_format[format][0];
         height = ff_h263_format[format][1];
@@ -1168,7 +1168,7 @@ int ff_h263_decode_picture_header(MpegEncContext *s)
         int ufep;
 
         /* H.263v2 */
-        s->h263_plus = 1;
+        h263_plus = 1;
         ufep = get_bits(&s->gb, 3); /* Update Full Extended PTYPE */
 
         /* ufep other than 0 and 1 are reserved */
@@ -1265,7 +1265,7 @@ int ff_h263_decode_picture_header(MpegEncContext *s)
                 s->avctx->framerate.den  = 1000 + get_bits1(&s->gb);
                 s->avctx->framerate.den *= get_bits(&s->gb, 7);
                 if(s->avctx->framerate.den == 0){
-                    av_log(s, AV_LOG_ERROR, "zero framerate\n");
+                    av_log(s->avctx, AV_LOG_ERROR, "zero framerate\n");
                     return -1;
                 }
                 gcd= av_gcd(s->avctx->framerate.den, s->avctx->framerate.num);
@@ -1316,6 +1316,8 @@ int ff_h263_decode_picture_header(MpegEncContext *s)
     s->mb_height = (s->height  + 15) / 16;
     s->mb_num = s->mb_width * s->mb_height;
 
+    s->gob_index = H263_GOB_HEIGHT(s->height);
+
     if (s->pb_frame) {
         skip_bits(&s->gb, 3); /* Temporal reference for B-pictures */
         if (s->custom_pcf)
@@ -1354,7 +1356,6 @@ int ff_h263_decode_picture_header(MpegEncContext *s)
             return -1;
         }
     }
-    s->f_code = 1;
 
     if (s->pict_type == AV_PICTURE_TYPE_B)
         s->low_delay = 0;
@@ -1367,7 +1368,8 @@ int ff_h263_decode_picture_header(MpegEncContext *s)
         s->c_dc_scale_table= ff_mpeg1_dc_scale_table;
     }
 
-        ff_h263_show_pict_info(s);
+    ff_h263_show_pict_info(s, h263_plus);
+
     if (s->pict_type == AV_PICTURE_TYPE_I && s->codec_tag == AV_RL32("ZYGO") && get_bits_left(&s->gb) >= 85 + 13*3*16 + 50){
         int i,j;
         for(i=0; i<85; i++) av_log(s->avctx, AV_LOG_DEBUG, "%d", get_bits1(&s->gb));

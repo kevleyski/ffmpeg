@@ -100,6 +100,18 @@ fate-matroska-non-rotation-displaymatrix: CMD = transcode mov $(TARGET_SAMPLES)/
     "-c copy" \
     "-show_entries stream_side_data_list"
 
+# This test tests container cropping. The expected output is that
+# only the copied streams have cropping (and displaymatrix) side data
+# and that stream #1 (for which applying cropping was not disabled)
+# and the reencoded stream #2 decode to the same.
+FATE_MATROSKA_FFMPEG_FFPROBE-$(call TRANSCODE, UTVIDEO, MATROSKA, MOV_DEMUXER HEVC_DECODER) \
+                               += fate-matroska-crop
+fate-matroska-crop: CMD = transcode mov $(TARGET_SAMPLES)/heif-conformance/MIAF007.heic matroska \
+    "-map 0:0 -map 0:0 -map 0:0 -c:0 copy -c:1 copy -c:2 utvideo" \
+    "-map 0" \
+    "-show_entries stream=index,codec_name,width,height:stream_side_data_list" "" \
+    "-apply_cropping:0 none"
+
 # This tests DOVI (reading from MP4 and Matroska and writing to Matroska)
 # as well as writing the Cues at the front (by shifting data) if
 # the initially reserved amount of space turns out to be insufficient.
@@ -268,7 +280,7 @@ fate-matroska-side-data-pref-codec: CMD = run ffprobe$(PROGSSUF)$(EXESUF) $(TARG
     -select_streams v:0 -show_streams -show_frames -show_entries stream=stream_side_data:frame=frame_side_data_list
 fate-matroska-side-data-pref-packet: CMD = run ffprobe$(PROGSSUF)$(EXESUF) $(TARGET_SAMPLES)/mkv/hdr10tags-both.mkv \
     -select_streams v:0 -show_streams -show_frames -show_entries stream=stream_side_data:frame=frame_side_data_list -side_data_prefer_packet mastering_display_metadata,content_light_level
-FATE_MATROSKA_FFPROBE-$(call ALLYES MATROSKA_DEMUXER HEVC_DECODER) += fate-matroska-side-data-pref-codec fate-matroska-side-data-pref-packet
+FATE_MATROSKA_FFPROBE-$(call ALLYES, MATROSKA_DEMUXER HEVC_DECODER) += fate-matroska-side-data-pref-codec fate-matroska-side-data-pref-packet
 
 FATE_SAMPLES_AVCONV += $(FATE_MATROSKA-yes)
 FATE_SAMPLES_FFPROBE += $(FATE_MATROSKA_FFPROBE-yes)

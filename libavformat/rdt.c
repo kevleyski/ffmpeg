@@ -206,6 +206,8 @@ ff_rdt_parse_header(const uint8_t *buf, int len,
             return -1; /* not followed by a data packet */
 
         pkt_len = AV_RB16(buf+3);
+        if (pkt_len > len)
+            return AVERROR_INVALIDDATA;
         buf += pkt_len;
         len -= pkt_len;
         consumed += pkt_len;
@@ -291,7 +293,7 @@ ff_rdt_parse_header(const uint8_t *buf, int len,
     return consumed + (get_bits_count(&gb) >> 3);
 }
 
-/**< return 0 on packet, no more left, 1 on packet, 1 on partial packet... */
+/** return 0 on packet, no more left, 1 on packet, 1 on partial packet... */
 static int
 rdt_parse_packet (AVFormatContext *ctx, PayloadContext *rdt, AVStream *st,
                   AVPacket *pkt, uint32_t *timestamp,

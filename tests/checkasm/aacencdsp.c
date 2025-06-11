@@ -67,7 +67,7 @@ static void test_abs_pow34(AACEncDSPContext *s)
 static void test_quant_bands(AACEncDSPContext *s)
 {
     int maxval = randomize_elem(aac_cb_maxval);
-    float q34 = randomize_elem(ff_aac_pow34sf_tab);
+    float q34 = (float)rnd() / (UINT_MAX / 1024);
     float rounding = (rnd() & 1) ? ROUND_TO_ZERO : ROUND_STANDARD;
     LOCAL_ALIGNED_16(float, in, [BUF_SIZE]);
     LOCAL_ALIGNED_16(float, scaled, [BUF_SIZE]);
@@ -81,8 +81,8 @@ static void test_quant_bands(AACEncDSPContext *s)
     for (int sign = 0; sign <= 1; sign++) {
         if (check_func(s->quant_bands, "quant_bands_%s",
                        sign ? "signed" : "unsigned")) {
-            LOCAL_ALIGNED_16(int, out, [BUF_SIZE]);
-            LOCAL_ALIGNED_16(int, out2, [BUF_SIZE]);
+            LOCAL_ALIGNED_32(int, out, [BUF_SIZE]);
+            LOCAL_ALIGNED_32(int, out2, [BUF_SIZE]);
 
             call_ref(out, in, scaled, BUF_SIZE, sign, maxval, q34, rounding);
             call_new(out2, in, scaled, BUF_SIZE, sign, maxval, q34, rounding);

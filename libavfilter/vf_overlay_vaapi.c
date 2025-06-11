@@ -21,8 +21,8 @@
 #include "libavutil/pixdesc.h"
 
 #include "avfilter.h"
+#include "filters.h"
 #include "framesync.h"
-#include "internal.h"
 #include "vaapi_vpp.h"
 #include "video.h"
 #include "libavutil/eval.h"
@@ -256,12 +256,13 @@ fail:
 
 static int have_alpha_planar(AVFilterLink *link)
 {
+    FilterLink              *l = ff_filter_link(link);
     enum AVPixelFormat pix_fmt = link->format;
     const AVPixFmtDescriptor *desc;
     AVHWFramesContext *fctx;
 
     if (link->format == AV_PIX_FMT_VAAPI) {
-        fctx    = (AVHWFramesContext *)link->hw_frames_ctx->data;
+        fctx    = (AVHWFramesContext *)l->hw_frames_ctx->data;
         pix_fmt = fctx->sw_format;
     }
 
@@ -413,11 +414,11 @@ static const AVFilterPad overlay_vaapi_outputs[] = {
     },
 };
 
-const AVFilter ff_vf_overlay_vaapi = {
-    .name            = "overlay_vaapi",
-    .description     = NULL_IF_CONFIG_SMALL("Overlay one video on top of another"),
+const FFFilter ff_vf_overlay_vaapi = {
+    .p.name          = "overlay_vaapi",
+    .p.description   = NULL_IF_CONFIG_SMALL("Overlay one video on top of another"),
+    .p.priv_class    = &overlay_vaapi_class,
     .priv_size       = sizeof(OverlayVAAPIContext),
-    .priv_class      = &overlay_vaapi_class,
     .init            = &overlay_vaapi_init,
     .uninit          = &overlay_vaapi_uninit,
     .activate        = &overlay_vaapi_activate,
