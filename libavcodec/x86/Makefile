@@ -25,8 +25,8 @@ OBJS-$(CONFIG_LPC)                     += x86/lpc_init.o
 OBJS-$(CONFIG_ME_CMP)                  += x86/me_cmp_init.o
 OBJS-$(CONFIG_MPEGAUDIODSP)            += x86/mpegaudiodsp.o
 OBJS-$(CONFIG_MPEGVIDEO)               += x86/mpegvideo.o
-OBJS-$(CONFIG_MPEGVIDEOENC)            += x86/mpegvideoenc.o           \
-                                          x86/mpegvideoencdsp_init.o
+OBJS-$(CONFIG_MPEGVIDEOENC)            += x86/mpegvideoenc.o
+OBJS-$(CONFIG_MPEGVIDEOENCDSP)         += x86/mpegvideoencdsp_init.o
 OBJS-$(CONFIG_PIXBLOCKDSP)             += x86/pixblockdsp_init.o
 OBJS-$(CONFIG_QPELDSP)                 += x86/qpeldsp_init.o
 OBJS-$(CONFIG_RV34DSP)                 += x86/rv34dsp_init.o
@@ -61,6 +61,7 @@ OBJS-$(CONFIG_MLP_DECODER)             += x86/mlpdsp_init.o
 OBJS-$(CONFIG_MPEG4_DECODER)           += x86/mpeg4videodsp.o x86/xvididct_init.o
 OBJS-$(CONFIG_PNG_DECODER)             += x86/pngdsp_init.o
 OBJS-$(CONFIG_PRORES_DECODER)          += x86/proresdsp_init.o
+OBJS-$(CONFIG_PRORES_RAW_DECODER)      += x86/proresdsp_init.o
 OBJS-$(CONFIG_RV40_DECODER)            += x86/rv40dsp_init.o
 OBJS-$(CONFIG_SBC_ENCODER)             += x86/sbcdsp_init.o
 OBJS-$(CONFIG_SVQ1_ENCODER)            += x86/svq1enc_init.o
@@ -122,7 +123,7 @@ X86ASM-OBJS-$(CONFIG_LLVIDENCDSP)      += x86/lossless_videoencdsp.o
 X86ASM-OBJS-$(CONFIG_LPC)              += x86/lpc.o
 X86ASM-OBJS-$(CONFIG_ME_CMP)           += x86/me_cmp.o
 X86ASM-OBJS-$(CONFIG_MPEGAUDIODSP)     += x86/dct32.o x86/imdct36.o
-X86ASM-OBJS-$(CONFIG_MPEGVIDEOENC)     += x86/mpegvideoencdsp.o
+X86ASM-OBJS-$(CONFIG_MPEGVIDEOENCDSP)  += x86/mpegvideoencdsp.o
 X86ASM-OBJS-$(CONFIG_OPUS_DECODER)     += x86/opusdsp.o
 X86ASM-OBJS-$(CONFIG_OPUS_ENCODER)     += x86/celt_pvq_search.o
 X86ASM-OBJS-$(CONFIG_PIXBLOCKDSP)      += x86/pixblockdsp.o
@@ -131,7 +132,7 @@ X86ASM-OBJS-$(CONFIG_QPELDSP)          += x86/qpeldsp.o                 \
                                           x86/qpel.o
 X86ASM-OBJS-$(CONFIG_RV34DSP)          += x86/rv34dsp.o
 X86ASM-OBJS-$(CONFIG_VC1DSP)           += x86/vc1dsp_loopfilter.o       \
-                                          x86/vc1dsp_mc.o
+                                          x86/vc1dsp_mc.o x86/fpel.o
 ifdef ARCH_X86_64
 X86ASM-OBJS-$(CONFIG_IDCTDSP)          += x86/simple_idct10.o
 else
@@ -151,7 +152,7 @@ X86ASM-OBJS-$(CONFIG_ADPCM_G722_ENCODER) += x86/g722dsp.o
 X86ASM-OBJS-$(CONFIG_ALAC_DECODER)     += x86/alacdsp.o
 X86ASM-OBJS-$(CONFIG_APNG_DECODER)     += x86/pngdsp.o
 X86ASM-OBJS-$(CONFIG_APV_DECODER)      += x86/apv_dsp.o
-X86ASM-OBJS-$(CONFIG_CAVS_DECODER)     += x86/cavsidct.o
+X86ASM-OBJS-$(CONFIG_CAVS_DECODER)     += x86/cavsidct.o x86/cavs_qpel.o
 X86ASM-OBJS-$(CONFIG_CFHD_ENCODER)     += x86/cfhdencdsp.o
 X86ASM-OBJS-$(CONFIG_CFHD_DECODER)     += x86/cfhddsp.o
 X86ASM-OBJS-$(CONFIG_DCA_DECODER)      += x86/dcadsp.o x86/synth_filter.o
@@ -169,6 +170,7 @@ X86ASM-OBJS-$(CONFIG_MLP_DECODER)      += x86/mlpdsp.o
 X86ASM-OBJS-$(CONFIG_MPEG4_DECODER)    += x86/xvididct.o
 X86ASM-OBJS-$(CONFIG_PNG_DECODER)      += x86/pngdsp.o
 X86ASM-OBJS-$(CONFIG_PRORES_DECODER)   += x86/proresdsp.o
+X86ASM-OBJS-$(CONFIG_PRORES_RAW_DECODER) += x86/proresdsp.o
 X86ASM-OBJS-$(CONFIG_RV40_DECODER)     += x86/rv40dsp.o
 X86ASM-OBJS-$(CONFIG_SBC_ENCODER)      += x86/sbcdsp.o
 X86ASM-OBJS-$(CONFIG_SVQ1_ENCODER)     += x86/svq1enc.o
@@ -184,6 +186,7 @@ X86ASM-OBJS-$(CONFIG_VP6_DECODER)      += x86/vp6dsp.o
 X86ASM-OBJS-$(CONFIG_VP9_DECODER)      += x86/vp9intrapred.o            \
                                           x86/vp9intrapred_16bpp.o      \
                                           x86/vp9itxfm.o                \
+                                          x86/vp9itxfm_avx2.o           \
                                           x86/vp9itxfm_avx512.o         \
                                           x86/vp9itxfm_16bpp.o          \
                                           x86/vp9itxfm_16bpp_avx512.o   \

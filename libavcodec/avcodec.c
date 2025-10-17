@@ -65,6 +65,8 @@ const SideDataMap ff_sd_global_map[] = {
     { AV_PKT_DATA_CONTENT_LIGHT_LEVEL,        AV_FRAME_DATA_CONTENT_LIGHT_LEVEL },
     { AV_PKT_DATA_ICC_PROFILE,                AV_FRAME_DATA_ICC_PROFILE },
     { AV_PKT_DATA_AMBIENT_VIEWING_ENVIRONMENT,AV_FRAME_DATA_AMBIENT_VIEWING_ENVIRONMENT },
+    { AV_PKT_DATA_3D_REFERENCE_DISPLAYS,      AV_FRAME_DATA_3D_REFERENCE_DISPLAYS },
+    { AV_PKT_DATA_EXIF,                       AV_FRAME_DATA_EXIF },
     { AV_PKT_DATA_NB },
 };
 
@@ -254,7 +256,11 @@ int attribute_align_arg avcodec_open2(AVCodecContext *avctx, const AVCodec *code
         }
     }
 
-    if (avctx->sample_rate < 0) {
+    /* AV_CODEC_CAP_CHANNEL_CONF is a decoder-only flag; so the code below
+     * in particular checks that sample_rate is set for all audio encoders. */
+    if (avctx->sample_rate < 0 ||
+        avctx->sample_rate == 0 && avctx->codec_type == AVMEDIA_TYPE_AUDIO &&
+        !(codec->capabilities & AV_CODEC_CAP_CHANNEL_CONF)) {
         av_log(avctx, AV_LOG_ERROR, "Invalid sample rate: %d\n", avctx->sample_rate);
         ret = AVERROR(EINVAL);
         goto free_and_end;
@@ -753,6 +759,8 @@ int ff_default_get_supported_config(const AVCodecContext *avctx,
                                     const void **out_configs,
                                     int *out_num_configs)
 {
+    const FFCodec *codec2 = ffcodec(codec);
+
     switch (config) {
 FF_DISABLE_DEPRECATION_WARNINGS
     case AV_CODEC_CONFIG_PIX_FORMAT:
@@ -780,6 +788,10 @@ FF_ENABLE_DEPRECATION_WARNINGS
         if (out_num_configs)
             *out_num_configs = 0;
         return 0;
+
+    case AV_CODEC_CONFIG_ALPHA_MODE:
+        WRAP_CONFIG(AVMEDIA_TYPE_VIDEO, codec2->alpha_modes, enum AVAlphaMode, AVALPHA_MODE_UNSPECIFIED);
+
     default:
         return AVERROR(EINVAL);
     }
